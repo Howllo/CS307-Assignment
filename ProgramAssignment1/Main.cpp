@@ -1,11 +1,15 @@
-﻿/****************************************
+/****************************************
 *
-*	File: WellClass.cpp
+*	File: Main.cpp
 *	Author: Tony A. Hardiman Jr.
-*	Purpose: Handles all the functionality for the class WellClass.h.
+*	Purpose: Entrance for the entire program.
 *	Assignment: Programming Assignment 1
 *	Declaration: This program is entirely my own work.
 *
 ****************************************/
 
-#include "WellClass.h"
+int main(int argc, char* argv[])
+{
+    
+    return 0;
+}
