@@ -7,7 +7,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "OilFieldDataParser.h"
-#include <string.h>
+#include <cstring>
 
 //-----------------------------------
 // Constructor

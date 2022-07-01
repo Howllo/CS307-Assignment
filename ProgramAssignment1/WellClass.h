@@ -9,9 +9,26 @@
 ****************************************/
 
 #pragma once
+#include "WellSensorHandler.h"
 
 class WellClass
 {
+    char well_ID[8];
+    char wellOperator[28];
+    int numberSensor;
+    class WellSensorHandler* well_sensor_handler;
 public:
-    
+    WellClass(class OilFieldDataParser* parser);
+    ~WellClass();
+
+    // Getters
+    const char* GetWellID() const;
+    const char* GetWellOperator() const;
+    int GetNumberSensor() const;
+    WellSensorHandler* GetWellSensorHandler();
+
+    // Setters
+    void SetWellID(char* ID);
+    void SetWellOperator(char* well_operator);
+    void SetNumberOfSensor(int sensorAmount);
 };

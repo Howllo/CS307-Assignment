@@ -8,8 +8,14 @@
 *
 ****************************************/
 
+#include "WellHandler.h"
+
 int main(int argc, char* argv[])
 {
+    WellHandler* handler = new WellHandler();
+
+    //Entrance to program.
+    handler->Update();
     
     return 0;
 }

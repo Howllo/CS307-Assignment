@@ -9,20 +9,43 @@
 ****************************************/
 
 #include "WellSensor.h"
+#include <string>
 
 WellSensor::WellSensor()
 {
     sensorType = sensor_none;
-    sensorData = 0;
+    minData = 0;
+    maxData = 0;
+    next = nullptr;
 }
 
 WellSensor::~WellSensor()
 {
 }
 
-float WellSensor::GetSensorData() const
+double WellSensor::GetMinSensorData() const
 {
-    return sensorData;
+    return minData;
+}
+
+double WellSensor::GetMaxSensorData() const
+{
+    return maxData;
+}
+
+const char* WellSensor::GetUnitInfo() const
+{
+    return unitInfo;
+}
+
+const char* WellSensor::GetUnitAbbrev() const
+{
+    return unitAbbrev;
+}
+
+const char* WellSensor::GetDisplayName() const
+{
+    return displayName;
 }
 
 SensorType WellSensor::GetSensorType() const
@@ -30,9 +53,29 @@ SensorType WellSensor::GetSensorType() const
     return sensorType;
 }
 
-void WellSensor::SetSensorData(float DataValue)
+void WellSensor::SetMinSensorData(double DataValue)
 {
-    sensorData = DataValue;
+    minData = DataValue;
+}
+
+void WellSensor::SetMaxSensorData(double DataValue)
+{
+    maxData = DataValue;
+}
+
+void WellSensor::SetUnitInfo(char* Unit_Info)
+{
+    strcpy_s(unitInfo, Unit_Info);
+}
+
+void WellSensor::SetUnitAbbrev(char* Unit_Abbrev)
+{
+    strcpy_s(unitAbbrev, Unit_Abbrev);
+}
+
+void WellSensor::SetDisplayName(char* Name)
+{
+    strcpy_s(displayName, Name);
 }
 
 void WellSensor::SetSensorType(SensorType Type)

@@ -311,6 +311,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="WellSensorHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitDepth.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="WellClass.h" />
     <ClInclude Include="WellHandler.h" />
     <ClInclude Include="WellSensor.h" />
+    <ClInclude Include="WellSensorHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
