@@ -16,6 +16,7 @@ int main(int argc, char* argv[])
 
     //Entrance to program.
     handler->Update();
-    
+
+    delete handler;
     return 0;
 }
