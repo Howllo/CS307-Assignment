@@ -21,6 +21,7 @@ InputWindow::InputWindow()
             std::cout << "Error detected! Please enter a integer number only!" << std::endl;
         }
     }
+    nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeIntervals)); 
 }
 
 InputWindow::~InputWindow()
@@ -37,11 +38,15 @@ bool InputWindow::CheckTime()
         std::cout << "Do you want to quit the program? (Y/N)";
         std::cin >> userAnswer;
 
-        if(userAnswer == 'Y')
+        if(userAnswer == 'Y' || userAnswer == 'y')
         {
             return true;
         }
+    } else
+    {
+        return false;
     }
+    
     nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeIntervals)); 
     return false;
 }

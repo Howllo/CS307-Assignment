@@ -66,9 +66,11 @@ bool WellHandler::AddWell()
         if(temp->m_pNext == nullptr)
         {
             temp->m_pNext = createWell;
+            dataParserXML->getWellData(createWell->well_ID, createWell->wellOperator, &createWell->numberSensor);
+            return true;
         }
     }
-    dataParserXML->getWellData(createWell->well_ID, createWell->wellOperator, &createWell->numberSensor);
+    return false;
 }
 
 bool WellHandler::RemoveWell(char* Well_ID)
@@ -96,7 +98,6 @@ bool WellHandler::RemoveWell(char* Well_ID)
         back = temp;
         temp = temp->m_pNext;
     }
-    
     return false;
 }
 

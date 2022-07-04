@@ -1,10 +1,13 @@
 ﻿#pragma once
 
+#include <chrono>
 #include "WellClass.h"
 
 class SensorReader
 {
-    int TimeInterval;
+    int timeInterval;
+
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds> nextTime;
     
 public:
     SensorReader();

@@ -1,131 +1,86 @@
 ﻿#include "WellSensorHandler.h"
+#include "OilFieldDataParser.h"
+#include "WellSensor.h"
 
-WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser)
+WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, int &numberSensor)
 {
-    holeDepth = nullptr;
-    bitDepth = nullptr;
-    rateOfPenetration = nullptr;
-    pumpPenetration = nullptr;
-    casingPressure = nullptr;
-    flowOut = nullptr;
-    torqueMax = nullptr;
-    mudPitVolume = nullptr;
-    extraSensor.resize(3);
-
-    // Set the elements to nullptr.
-    for(int i = 0; i < extraSensor.size(); i++)
+    m_pHead = nullptr;
+    
+    for(int i = 0; i < numberSensor; i++)
     {
-        extraSensor[i] = nullptr;
+        WellSensor* sensor = new WellSensor();
+        char sensorType[28];
+        char className[28];
+        char displayName[28];
+        double minData = 0;
+        double maxData = 0;
+        char unitInfo[28];
+        char unitAbbrev[28];
+        
+        parser->getSensorData(Well_ID, sensorType, className, displayName, &minData, &maxData, unitInfo, unitAbbrev);
+
+        sensor->SetSensorType(sensorType);
+        sensor->SetClassName(className);
+        sensor->SetDisplayName(displayName);
+        sensor->SetMinSensorData(minData);
+        sensor->SetMaxSensorData(maxData);
+        sensor->SetUnitInfo(unitInfo);
+        sensor->SetUnitAbbrev(unitAbbrev);
+        
+        AddWellSensor(sensor);
     }
 }
 
 WellSensorHandler::~WellSensorHandler()
 {
+    WellSensor* sensorNow = m_pHead;
+    WellSensor* sensorNext = m_pHead->next;
     
-}
-
-HoleDepth* WellSensorHandler::GetHoleDepth()
-{
-    return holeDepth;
-}
-
-BitDepth* WellSensorHandler::GetBitDepth()
-{
-    return bitDepth;
-}
-
-RateOfPenetration* WellSensorHandler::GetRateOfPenetration()
-{
-    return rateOfPenetration;
-}
-
-PumpPenetration* WellSensorHandler::GetPumpPenetration()
-{
-    return pumpPenetration;
-}
-
-CasingPressure* WellSensorHandler::GetCasingPressure()
-{
-    return casingPressure;
-}
-
-FlowOut* WellSensorHandler::GetFlowOut()
-{
-    return flowOut;
-}
-
-TorqueMax* WellSensorHandler::GetTorqueMax()
-{
-    return torqueMax;
-}
-
-MudPitVolume* WellSensorHandler::GetMudPtVolume()
-{
-    return mudPitVolume;
-}
-
-std::vector<WellSensor*> WellSensorHandler::GetExtraSensors()
-{
-    return extraSensor;
-}
-
-void WellSensorHandler::AddExtraSensors(WellSensor* Sensor)
-{
-    for(int i = 0; i < extraSensor.size(); i++)
+    while(sensorNow != nullptr)
     {
-        if(extraSensor[i] == nullptr)
+        sensorNext = sensorNow->next;
+        delete sensorNow;
+        sensorNow = sensorNext;
+    }
+}
+
+void WellSensorHandler::printSensorData()
+{
+    const WellSensor* temp = m_pHead;
+    while(temp != nullptr)
+    {
+        if(temp->isSelected)
         {
-            extraSensor[i] = Sensor;
-            return;
+            std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
+            std::cout << "Unit Abbreviation:\t" << temp->GetUnitAbbrev() << endl;
+            std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
+            std::cout << "------------------------Output Data------------------------" << endl;
+            std::cout << std::endl << "Min Data\t" << temp->GetMinSensorData() << "\tMax Data:\t" << temp->GetMaxSensorData() << endl;
         }
     }
-
-    // If there is no open slots resize the array based on the size plus one. Add the sensor on the end.
-    extraSensor.resize( extraSensor.size() + 1 );
-    extraSensor.push_back(Sensor);
 }
 
-void WellSensorHandler::SetHoleDepth(HoleDepth* hole_depth)
+WellSensor* WellSensorHandler::GetWellSensors() const
 {
-    holeDepth = hole_depth;
+    return m_pHead;
 }
 
-void WellSensorHandler::SetBitDepth(BitDepth* bit_depth)
+void WellSensorHandler::AddWellSensor(WellSensor* sensor)
 {
-    bitDepth = bit_depth;
-}
+    WellSensor* temp = m_pHead;
 
-void WellSensorHandler::SetRateOfPenetration(RateOfPenetration* rate_penetration)
-{
-    rateOfPenetration = rate_penetration;
-}
-
-void WellSensorHandler::SetPumpPenetration(PumpPenetration* pump_penetration)
-{
-    pumpPenetration = pump_penetration;
-}
-
-void WellSensorHandler::SetCasingPressure(CasingPressure* casing_pressure)
-{
-    casingPressure = casing_pressure;
-}
-
-void WellSensorHandler::SetFlowOut(FlowOut* flow_out)
-{
-    flowOut = flow_out;
-}
-
-void WellSensorHandler::SetTorqueMax(TorqueMax* torque_Max)
-{
-    torqueMax = torque_Max;
-}
-
-void WellSensorHandler::SetMudPitVolume(MudPitVolume* mud_pit_volume)
-{
-    mudPitVolume = mud_pit_volume;
-}
-
-void WellSensorHandler::SetOwner(WellClass* well_class)
-{
-    getOwner = well_class;
+    if(m_pHead == nullptr)
+    {
+        m_pHead = sensor;
+    }
+    
+    while(temp != nullptr)
+    {
+        if(temp->next == nullptr)
+        {
+            temp->next = sensor;
+            return;
+        }
+        temp = temp->next;
+    }
 }

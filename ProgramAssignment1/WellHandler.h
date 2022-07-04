@@ -9,7 +9,6 @@
 ****************************************/
 
 #pragma once
-#include "WellSensorHandler.h"
 #include "DisplayClass.h"
 #include "InputWindow.h"
 #include "SensorReader.h"

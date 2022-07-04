@@ -13,14 +13,24 @@
 
 WellSensor::WellSensor()
 {
-    sensorType = sensor_none;
     minData = 0;
     maxData = 0;
+    isSelected = false;
     next = nullptr;
 }
 
 WellSensor::~WellSensor()
 {
+}
+
+const char* WellSensor::GetSensorType() const
+{
+    return sensorType;
+}
+
+const char* WellSensor::GetClassName() const
+{
+    return className;
 }
 
 double WellSensor::GetMinSensorData() const
@@ -33,6 +43,11 @@ double WellSensor::GetMaxSensorData() const
     return maxData;
 }
 
+const char* WellSensor::GetDisplayName() const
+{
+    return displayName;
+}
+
 const char* WellSensor::GetUnitInfo() const
 {
     return unitInfo;
@@ -43,14 +58,14 @@ const char* WellSensor::GetUnitAbbrev() const
     return unitAbbrev;
 }
 
-const char* WellSensor::GetDisplayName() const
+void WellSensor::SetSensorType(char* SensorType)
 {
-    return displayName;
+    strcpy_s(sensorType, SensorType);
 }
 
-SensorType WellSensor::GetSensorType() const
+void WellSensor::SetClassName(char* ClassName)
 {
-    return sensorType;
+    strcpy_s(className, ClassName);
 }
 
 void WellSensor::SetMinSensorData(double DataValue)
@@ -63,6 +78,11 @@ void WellSensor::SetMaxSensorData(double DataValue)
     maxData = DataValue;
 }
 
+void WellSensor::SetDisplayName(char* Name)
+{
+    strcpy_s(displayName, Name);
+}
+
 void WellSensor::SetUnitInfo(char* Unit_Info)
 {
     strcpy_s(unitInfo, Unit_Info);
@@ -71,14 +91,4 @@ void WellSensor::SetUnitInfo(char* Unit_Info)
 void WellSensor::SetUnitAbbrev(char* Unit_Abbrev)
 {
     strcpy_s(unitAbbrev, Unit_Abbrev);
-}
-
-void WellSensor::SetDisplayName(char* Name)
-{
-    strcpy_s(displayName, Name);
-}
-
-void WellSensor::SetSensorType(SensorType Type)
-{
-    sensorType = Type;
 }

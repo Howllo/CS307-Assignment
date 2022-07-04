@@ -10,34 +10,39 @@
 
 #pragma once
 
-enum SensorType { sensor_none, hole_depth, bit_depth, flow_out, rate_of_penetration, pump_penetration, torque_max, mud_pit_volume, casing_pressure };
-
 class WellSensor
 {
+    char sensorType[28];
+    char className[28];
     double minData;
     double maxData;
+    char displayName[28];
     char unitInfo[28];
-    char unitAbbrev[10];
-    char displayName[8];
-    SensorType sensorType;
-    WellSensor* next;
+    char unitAbbrev[28];
+    
 public:
     WellSensor();
     ~WellSensor();
 
+    // Variable
+    bool isSelected;
+    WellSensor* next;
+    
     // Getters
+    const char* GetSensorType() const;
+    const char* GetClassName() const;
+    const char* GetDisplayName() const;
     double GetMinSensorData() const;
     double GetMaxSensorData() const;
     const char* GetUnitInfo() const;
     const char* GetUnitAbbrev() const;
-    const char* GetDisplayName() const;
-    SensorType GetSensorType() const;
     
     // Setters
+    void SetSensorType(char* SensorType);
+    void SetClassName(char* ClassName);
+    void SetDisplayName(char* Name);
     void SetMinSensorData(double DataValue);
     void SetMaxSensorData(double DataValue);
     void SetUnitInfo(char* Unit_Info);
     void SetUnitAbbrev(char* Unit_Abbrev);
-    void SetDisplayName(char* Name);
-    void SetSensorType(SensorType Type);
 };
