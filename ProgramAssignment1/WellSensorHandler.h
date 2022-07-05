@@ -12,6 +12,9 @@ public:
 
     // Print all the sensor data.
     void printSensorData();
+
+    // Method
+    void AddSensor(int* Sensor);
     
     // Getter
     WellSensor* GetWellSensors() const;

@@ -22,7 +22,7 @@ class WellHandler
     char fileName[128];
     WellClass* m_pActiveWellHead;
     WellClass* m_pSelectedWellHead;
-    
+    void SelectSensor(WellClass* well);
 public:
     WellHandler();
     ~WellHandler();
@@ -38,6 +38,6 @@ public:
     WellClass* ReturnWell(char* Well_ID);
 
     //Selected Well Linked List
-    bool AddToSelectedWell();
+    bool AddToSelectedWell(char* WellID);
     bool RemoveFromSelectedWell(char* Well_ID);
 };

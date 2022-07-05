@@ -51,14 +51,30 @@ void WellSensorHandler::printSensorData()
     {
         if(temp->isSelected)
         {
+            std::cout << "Sensor Type:\t" << temp->GetSensorType();
             std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
-            std::cout << "Unit Abbreviation:\t" << temp->GetUnitAbbrev() << endl;
             std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
             std::cout << "------------------------Output Data------------------------" << endl;
-            std::cout << std::endl << "Min Data\t" << temp->GetMinSensorData() << "\tMax Data:\t" << temp->GetMaxSensorData() << endl;
+            std::cout << std::endl << "Min Data\t" << temp->GetMinSensorData() << "\tMax Data:\t" << temp->GetMaxSensorData();
+            std::cout << "\tUnit Abbreviation:\t" << temp->GetUnitAbbrev() << endl;
         }
     }
 }
+
+void WellSensorHandler::AddSensor(int* Sensor)
+{
+    int i = 0;
+    switch(Sensor[i])
+    {
+        case 1:
+             
+            i++;
+        
+        default:
+            break;
+    }
+}
+
 
 WellSensor* WellSensorHandler::GetWellSensors() const
 {

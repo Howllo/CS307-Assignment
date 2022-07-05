@@ -8,12 +8,16 @@
 *
 ****************************************/
 
+#include <iostream>
+
 #include "WellHandler.h"
 
 int main(int argc, char* argv[])
 {
     WellHandler* handler = new WellHandler();
 
+    std::cout << "Finished creating object." << std::endl;
+    
     //Entrance to program.
     handler->Update();
 

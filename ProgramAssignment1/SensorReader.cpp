@@ -16,15 +16,19 @@ SensorReader::~SensorReader()
 
 void SensorReader::PrintSensorData(WellClass* m_pSelectedHead)
 {
-    auto currentTime = std::chrono::system_clock::now();
-    WellClass* temp = m_pSelectedHead;
-    
-    if(nextTime >= currentTime)
+    const auto currentTime = std::chrono::system_clock::now();
+
+    if(currentTime >= nextTime)
     {
-        while (temp != nullptr)
+        WellClass* temp = m_pSelectedHead;
+    
+        if(nextTime >= currentTime)
         {
-            
+            while (temp != nullptr)
+            {
+                temp->printWellData();
+            }
         }
+        nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeInterval));
     }
 }
-
