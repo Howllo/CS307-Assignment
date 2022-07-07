@@ -9,14 +9,12 @@
 ****************************************/
 
 #pragma once
-#include "DisplayClass.h"
 #include "InputWindow.h"
 #include "SensorReader.h"
 
 class WellHandler
 {
     OilFieldDataParser* dataParserXML;
-    DisplayClass* displayClass;
     SensorReader* sensorReader;
     InputWindow* inputWindow;
     char fileName[256];

@@ -28,8 +28,9 @@ WellClass::~WellClass()
 
 void WellClass::printWellData()
 {
-    std::cout << std::endl << "Well Operator:\t" << wellOperator;
-    std::cout << "\tWell ID:\t" << well_ID << std::endl;
-    std::cout << "-----------------------Sensor Data-----------------------" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Well Operator:\t" << wellOperator << std::endl;
+    std::cout << "Well ID:\t" << well_ID << std::endl;
+    std::cout << "----------------------Sensor Data-----------------------" << std::endl;
     well_sensor_handler->printSensorData();
 }

@@ -65,7 +65,7 @@ void WellSensorHandler::printSensorData()
             std::cout << "Sensor Type:\t" << temp->GetSensorType() << endl;
             std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
             std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
-            std::cout << "Current Data: "<< temp->GetCurrentData() << temp->GetUnitAbbrev() << endl << endl;
+            std::cout << "Current Data:\t"<< temp->GetCurrentData() << temp->GetUnitAbbrev() << endl << endl;
         }
         temp = temp->next;
     }

@@ -19,13 +19,16 @@ WellHandler::WellHandler()
     m_pActiveWellHead = nullptr;
     m_pSelectedWellHead = nullptr;
     totalActiveWell = 0;
+    for(int i = 0; i < 256; i++)
+    {
+        fileName[i] = '\0';
+    }
     
-    char TestArray[] = "I:/CS-307/Program/ProgramAssignment1/OilFieldData.xml";
-    //std::cout << "Enter file location: ";
-    //std::cin >> fileName;
+    //char TestArray[] = "I:/CS-307/Program/ProgramAssignment1/OilFieldData.xml";
+    std::cout << "Enter file location: ";
+    std::cin >> fileName;
     
-    dataParserXML = new OilFieldDataParser(const_cast<const char*>(TestArray));
-    displayClass = new DisplayClass();
+    dataParserXML = new OilFieldDataParser(const_cast<const char*>(fileName));
     sensorReader = new SensorReader();
     
     // Creates the Wells
@@ -49,9 +52,9 @@ WellHandler::WellHandler()
 
 WellHandler::~WellHandler()
 {
-    delete displayClass;
     delete sensorReader;
     delete inputWindow;
+    delete dataParserXML;
 }
 
 void WellHandler::Update()
