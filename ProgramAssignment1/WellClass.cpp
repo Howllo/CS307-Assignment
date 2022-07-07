@@ -15,6 +15,7 @@ WellClass::WellClass(OilFieldDataParser* parser)
 {
     isSelect = false;
     m_pNext = nullptr;
+    numberSensor = 8;
     
     // Create Well Sensor Handler Object
     well_sensor_handler = new WellSensorHandler(well_ID, parser, numberSensor);

@@ -17,6 +17,15 @@ WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, 
         double maxData = 0;
         char unitInfo[64];
         char unitAbbrev[64];
+
+        for(int i = 0; i < 64; i++)
+        {
+            sensorType[i] = '\0';
+            className[i] = '\0';
+            displayName[i] = '\0';
+            unitInfo[i] = '\0';
+            unitAbbrev[i] = '\0';
+        }
         
         parser->getSensorData(Well_ID, sensorType, className, displayName, &minData, &maxData, unitInfo, unitAbbrev);
         
@@ -53,12 +62,10 @@ void WellSensorHandler::printSensorData()
     {
         if(temp->isSelected)
         {
-            std::cout << "Sensor Type:\t" << temp->GetSensorType();
+            std::cout << "Sensor Type:\t" << temp->GetSensorType() << endl;
             std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
             std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
-            std::cout << "------------------------Output Data------------------------" << endl;
-            std::cout << std::endl << "Min Data\t" << temp->GetMinSensorData() << "\tMax Data:\t" << temp->GetMaxSensorData();
-            std::cout << "\tUnit Abbreviation:\t" << temp->GetUnitAbbrev() << endl;
+            std::cout << "Current Data: "<< temp->GetCurrentData() << temp->GetUnitAbbrev() << endl << endl;
         }
         temp = temp->next;
     }
@@ -102,10 +109,21 @@ void WellSensorHandler::ChangeSensorData()
     WellSensor* temp = m_pHead;
     while(temp != nullptr)
     {
-        double Min = temp->GetMinSensorData(); 
-        double Max = temp->GetMaxSensorData();
+        double MaxData = 0;
+        double MinData = 0;
+        if(strcmp(temp->GetClassName(), "SensorBitDepth") == 0 || strcmp(temp->GetClassName(), "SensorHoleDepth") == 0)
+        {
+            MinData = temp->GetMinSensorData();
+            MaxData = 7000;
+        }
+        else
+        {
+            MinData = temp->GetMinSensorData(); 
+            MaxData = temp->GetMaxSensorData();
+        }
+        
         srand(time_t(0.0f));
-        double rN = rand() / ((Max+1) * (Max-Min+1) + Min);
+        double rN = rand() / ((MaxData+1) * (MaxData-MinData+1) + MinData);
         temp->SetCurrentData(rN);
         temp = temp->next;
     }
@@ -129,6 +147,7 @@ void WellSensorHandler::SetWellSensorSelect(const char* Name, SensorSelection se
             }
             return;
         }
+        temp = temp->next;
     }
 }
 

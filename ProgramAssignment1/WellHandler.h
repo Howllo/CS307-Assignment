@@ -44,7 +44,7 @@ public:
      * \param Well_ID Takes in a Well_ID to delete the well from the program.
      * \return Return a true boolean if it successfully deletes a well, or returns false if it failed. 
      */
-    bool DeleteWell(char* Well_ID);
+    bool DeleteWell(const char* Well_ID);
 
     /**
      * \brief This is used to add wells back to the active wells linked list.
