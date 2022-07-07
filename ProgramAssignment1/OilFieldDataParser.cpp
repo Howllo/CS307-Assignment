@@ -51,7 +51,7 @@ OilFieldDataParser::OilFieldDataParser(const char *fileName)
 	}
 
 	// Custom Check...
-	cout << "Successfully founded..." << endl;
+	cout << "Successfully found..." << endl;
 	
 	// Create and initialize the array of ints counting sensors for each well
 	m_ipNextSensorNumber = new int[m_iNumWells];
@@ -105,8 +105,6 @@ OilFieldDataParser::OilFieldDataParser(const char *fileName)
 		cout << "Program terminated.\n\n";
 		exit(0);
 	}
-
-	cout << "Finished checking data..." << endl << endl;
 }
 
 //-----------------------------------

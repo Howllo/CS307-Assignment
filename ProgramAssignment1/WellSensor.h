@@ -12,13 +12,14 @@
 
 class WellSensor
 {
-    char sensorType[28];
-    char className[28];
+    char sensorType[64];
+    char className[64];
     double minData;
     double maxData;
-    char displayName[28];
-    char unitInfo[28];
-    char unitAbbrev[28];
+    double currentData;
+    char displayName[64];
+    char unitInfo[64];
+    char unitAbbrev[64];
     
 public:
     WellSensor();
@@ -36,6 +37,7 @@ public:
     double GetMaxSensorData() const;
     const char* GetUnitInfo() const;
     const char* GetUnitAbbrev() const;
+    double GetCurrentData() const;
     
     // Setters
     void SetSensorType(char* SensorType);
@@ -45,4 +47,5 @@ public:
     void SetMaxSensorData(double DataValue);
     void SetUnitInfo(char* Unit_Info);
     void SetUnitAbbrev(char* Unit_Abbrev);
+    void SetCurrentData(double Data);
 };

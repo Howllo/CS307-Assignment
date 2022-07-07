@@ -19,9 +19,10 @@ public:
 
     // Public variable.
     WellClass* m_pNext;
-    char well_ID[10];
-    char wellOperator[28];
+    char well_ID[9];
+    char wellOperator[32];
     int numberSensor;
+    bool isSelect;
 
     // Returns the Well Sensor Handler
     class WellSensorHandler* well_sensor_handler;

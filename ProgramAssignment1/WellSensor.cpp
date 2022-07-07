@@ -17,6 +17,7 @@ WellSensor::WellSensor()
     maxData = 0;
     isSelected = false;
     next = nullptr;
+    currentData = 0;
 }
 
 WellSensor::~WellSensor()
@@ -56,6 +57,16 @@ const char* WellSensor::GetUnitInfo() const
 const char* WellSensor::GetUnitAbbrev() const
 {
     return unitAbbrev;
+}
+
+double WellSensor::GetCurrentData() const
+{
+    return currentData;
+}
+
+void WellSensor::SetCurrentData(double Data)
+{
+    currentData = Data;
 }
 
 void WellSensor::SetSensorType(char* SensorType)

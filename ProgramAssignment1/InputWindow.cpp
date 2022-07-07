@@ -1,5 +1,4 @@
 ﻿#include "InputWindow.h"
-#include <chrono>
 #include <iostream>
 #include <string>
 
@@ -9,12 +8,13 @@ InputWindow::InputWindow()
 {
     bool checkError = false;
     char user_input[3];
+    firstTime = true;
     
     while(checkError == false)
     {
-        std::cout << "What is seconds between check whether or not you want to quit?" << std::endl;
-        std::cout << "Default is 10 seconds: ";
+        std::cout << "Time between asking for input in seconds: ";
         std::cin >> user_input;
+        std::cout << std::endl;
 
         for(int i = 0; i < 3; i++)
         {
@@ -26,8 +26,9 @@ InputWindow::InputWindow()
 
     //Convert
     timeIntervals = std::stoi(user_input);
-    
-    nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeIntervals)); 
+
+    //Set Next Time.
+    nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(15)); 
 }
 
 InputWindow::~InputWindow()
@@ -53,35 +54,79 @@ bool InputWindow::CheckTime()
     {
         return false;
     }
-    
     nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeIntervals)); 
     return false;
 }
 
-std::unique_ptr<char[]> InputWindow::SelectWell()
+std::unique_ptr<char[]> InputWindow::SelectWell(const WellClass* activeHead)
 {
     const auto currentTime = std::chrono::system_clock::now();
     std::unique_ptr<char[]> rWellID(new char[10]);
-    if(currentTime > nextTime)
+    if(currentTime > nextTime || firstTime == true)
     {
-        char WellID[10];
-        std::cout << "What well you want to selected?" << std::endl;
-        std::cin >> WellID;
-        std::copy_n(WellID, 10, &rWellID[0]);
-        return rWellID;
+        firstTime = false;
+        char CheckUser = ' ';
+        std::cout << "Do you want to select a well? (Y/N): ";
+        std::cin >> CheckUser;
+        std::cout << std::endl;
+        if(CheckUser == 'Y' || CheckUser == 'y')
+        {
+            GetWell(activeHead);
+            char WellID[10];
+            std::cout << "What well you want to selected?" << std::endl;\
+            std::cin >> WellID;
+            std::copy_n(WellID, 10, &rWellID[0]);
+            return rWellID;
+        }
     }
-    return rWellID;
+    return nullptr;
 }
 
-std::unique_ptr<char[]> InputWindow::RemoveSelectedWell()
+std::unique_ptr<char[]> InputWindow::RemoveSelectedWell(const WellClass* selectedHead)
 {
     const auto currentTime = std::chrono::system_clock::now();
     std::unique_ptr<char[]> rWellID(new char[10]);
     if(currentTime > nextTime)
     {
         char CheckUser = ' ';
-        std::cout << "Do you want to remove a well?" << std::endl;
+        std::cout << "Do you want to remove a well? (Y/N): ";
         std::cin >> CheckUser;
+        std::cout << std::endl;
+        if(CheckUser == 'Y' || CheckUser == 'y')
+        {
+            GetWell(selectedHead);
+            char WellID[10];
+            std::cout << "What well you want to selected?" << std::endl;
+            std::cin >> WellID;
+            std::copy_n(WellID, 10, &rWellID[0]);
+            return rWellID;
+        }
+    }
+    return nullptr;
+}
+
+void InputWindow::GetWell(const WellClass* head)
+{
+    const WellClass* temp = head;
+    std::cout << std::endl << "Choose from these wells: " << std::endl;
+    
+    while (temp != nullptr)
+    {
+        std::cout << "Well: " << temp->well_ID << std::endl;
+        temp = temp->m_pNext;
+    }
+}
+
+std::unique_ptr<char[]> InputWindow::SensorSettings()
+{
+    const auto currentTime = std::chrono::system_clock::now();
+    std::unique_ptr<char[]> rWellID(new char[10]);
+    if(currentTime > nextTime)
+    {
+        char CheckUser = ' ';
+        std::cout << "Do you want to change sensor setting? (Y/N): ";
+        std::cin >> CheckUser;
+        std::cout << std::endl;
         if(CheckUser == 'Y' || CheckUser == 'y')
         {
             char WellID[10];
@@ -91,6 +136,10 @@ std::unique_ptr<char[]> InputWindow::RemoveSelectedWell()
             return rWellID;
         }
     }
-    return rWellID;
+    return nullptr;
 }
 
+std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>& InputWindow::GetNextTime()
+{
+    return nextTime;
+}
