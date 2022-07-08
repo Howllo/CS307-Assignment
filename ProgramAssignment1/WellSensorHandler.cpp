@@ -6,26 +6,18 @@
 WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, int numberSensor)
 {
     m_pHead = nullptr;
+    SeedGen = 0;
     
     for(int i = 0; i < numberSensor; i++)
     {
         WellSensor* sensor = new WellSensor();
-        char sensorType[64];
-        char className[64];
-        char displayName[64];
+        char sensorType[64] = "";
+        char className[64] = "";
+        char displayName[64] = "";
         double minData = 0;
         double maxData = 0;
-        char unitInfo[64];
-        char unitAbbrev[64];
-
-        for(int i = 0; i < 64; i++)
-        {
-            sensorType[i] = '\0';
-            className[i] = '\0';
-            displayName[i] = '\0';
-            unitInfo[i] = '\0';
-            unitAbbrev[i] = '\0';
-        }
+        char unitInfo[64] = "";
+        char unitAbbrev[64] = "";
         
         parser->getSensorData(Well_ID, sensorType, className, displayName, &minData, &maxData, unitInfo, unitAbbrev);
         
@@ -62,10 +54,9 @@ void WellSensorHandler::printSensorData()
     {
         if(temp->isSelected)
         {
-            std::cout << "Sensor Type:\t" << temp->GetSensorType() << endl;
-            std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
             std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
-            std::cout << "Current Data:\t"<< temp->GetCurrentData() << temp->GetUnitAbbrev() << endl << endl;
+            std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
+            std::cout << "Current Data:\t"<< temp->GetCurrentData() << " " << temp->GetUnitAbbrev() << endl << endl;
         }
         temp = temp->next;
     }
@@ -121,11 +112,13 @@ void WellSensorHandler::ChangeSensorData()
             MinData = temp->GetMinSensorData(); 
             MaxData = temp->GetMaxSensorData();
         }
-        
-        srand(time_t(0.0f));
-        double rN = rand() / ((MaxData+1) * (MaxData-MinData+1) + MinData);
-        temp->SetCurrentData(rN);
+
+        // Randomize
+        default_random_engine totalRand(SeedGen);
+        uniform_int_distribution<int> RandomNum(((int)MinData), ((int)MaxData));
+        temp->SetCurrentData(RandomNum(totalRand));
         temp = temp->next;
+        SeedGen++;
     }
 }
 
