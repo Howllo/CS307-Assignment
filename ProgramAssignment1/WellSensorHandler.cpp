@@ -100,6 +100,10 @@ void WellSensorHandler::ChangeSensorData()
     WellSensor* temp = m_pHead;
     while(temp != nullptr)
     {
+        //Infinite Power
+        if(SeedGen == LONG_MAX)
+            SeedGen = 0;
+        
         double MaxData = 0;
         double MinData = 0;
         if(strcmp(temp->GetClassName(), "SensorBitDepth") == 0 || strcmp(temp->GetClassName(), "SensorHoleDepth") == 0)

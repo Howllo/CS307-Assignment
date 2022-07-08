@@ -14,7 +14,7 @@ class WellSensorHandler
      * faster than a single second. I had to generate new seeds at computer instruction speed, so incrementing it was the only
      * way to generate it fast enough for each function call.
      */
-    long int SeedGen;
+    long SeedGen;
 public:
     WellSensorHandler(char* Well_ID, class OilFieldDataParser* parser, int numberSensor);
     ~WellSensorHandler();
