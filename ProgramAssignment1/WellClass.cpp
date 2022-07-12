@@ -13,13 +13,9 @@
 #include <chrono>
 #include <ctime>
 
-void WellClass::CreateSensorData(OilFieldDataParser* parser)
-{
-    well_sensor_handler = new WellSensorHandler(well_ID, parser, numberSensor);
-}
-
 WellClass::WellClass()
 {
+    well_sensor_handler = nullptr;
     isSelect = false;
     m_pNext = nullptr;
     numberSensor = 8;
@@ -30,12 +26,16 @@ WellClass::~WellClass()
     delete well_sensor_handler;
 }
 
+void WellClass::CreateSensorData(OilFieldDataParser* parser)
+{
+    well_sensor_handler = new WellSensorHandler(well_ID, parser, numberSensor);
+}
+
 void WellClass::printWellData()
 {
     char time[32]; 
     const std::time_t timeT = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     ctime_s(time, sizeof(time), &timeT);
-    
     std::cout << std::endl << "\tDisplay Time: " << time;
     std::cout << "Well Operator:\t" << wellOperator << std::endl;
     std::cout << "Well ID:\t" << well_ID << std::endl;

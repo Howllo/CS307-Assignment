@@ -14,6 +14,8 @@
 #include <string>
 #include <chrono>
 
+typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds> time_point;
+
 WellHandler::WellHandler()
 {
     m_pActiveWellHead = nullptr;
@@ -29,7 +31,6 @@ WellHandler::WellHandler()
     std::cin >> fileName;
     
     dataParserXML = new OilFieldDataParser(const_cast<const char*>(fileName));
-    sensorReader = new SensorReader();
     
     // Creates the Wells
     for(int i = 0; i < dataParserXML->getWellCount(); i++)
@@ -45,6 +46,10 @@ WellHandler::WellHandler()
         totalActiveWell++;
         activeTemp = activeTemp->m_pNext;
     }
+
+    // Set Timers
+    timeInterval = 5;
+    nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeInterval));
     
     // Delete Data Parser
     delete dataParserXML;
@@ -52,7 +57,6 @@ WellHandler::WellHandler()
 
 WellHandler::~WellHandler()
 {
-    delete sensorReader;
     delete inputWindow;
     delete dataParserXML;
 }
@@ -60,55 +64,24 @@ WellHandler::~WellHandler()
 void WellHandler::Update()
 {
     bool bProgramStillRunning = true;
-    int wellCount = 0;
-    
-    while(true)
-    {
-        std::cout << "How many well(s) you want to add?" << std::endl;
-        std::cin >> wellCount;
-        if(wellCount > 0 && wellCount < totalActiveWell)
-        {
-            break;
-        }
-    }
-
-    std::cout << std::endl;
-   
-    for(int i = 0; i < wellCount; i++)
-    {
-        bool user_validate = false;
-        char userChoice[9];
-
-        // Check user input
-        while(user_validate == false)
-        {
-            const WellClass* temp = m_pActiveWellHead;
-            inputWindow->GetWell(m_pActiveWellHead);
-            std::cout << "Select Well: ";
-            std::cin >> userChoice;
-        
-            while(temp != nullptr)
-            {
-                if(strcmp(temp->well_ID, userChoice) == 0)
-                {
-                    user_validate = true;
-                    break;
-                }
-                temp = temp->m_pNext;
-            }
-        }
-        std::cout << std::endl;
-        AddSelectedWell(userChoice);
-    }
+    StartupFunction();
 
     //Main Loop
    while(bProgramStillRunning != false)
    {
-       auto currentTime = std::chrono::system_clock::now();
+       const auto currentTime = std::chrono::system_clock::now();
 
-       // Print Data.
-       sensorReader->PrintSensorData(m_pSelectedWellHead);
-
+       // Print Well Data and Sensor Data for Wells. After next time.
+       if(currentTime >= nextTime)
+       {
+           WellClass* temp = m_pSelectedWellHead;
+           while(temp != nullptr)
+           {
+               temp->printWellData();
+               temp = temp->m_pNext;
+           }
+       }
+       
        // User Input2
        if(currentTime >= inputWindow->GetNextTime())
        {
@@ -239,7 +212,7 @@ bool WellHandler::AddSelectedWell(char* Well_ID)
                 RemoveActiveWell(temp);
                 m_pSelectedWellHead = temp;
                 temp->isSelect = true;
-                sensorReader->SelectSensor(temp, sensor_add);
+                temp->well_sensor_handler->CallSensorReaderSelect();
                 return true;
             }
             
@@ -250,7 +223,7 @@ bool WellHandler::AddSelectedWell(char* Well_ID)
                     RemoveActiveWell(temp);
                     temp2->m_pNext = temp;
                     temp->isSelect = true;
-                    sensorReader->SelectSensor(temp, sensor_add);
+                    temp->well_sensor_handler->CallSensorReaderSelect();
                     return true;
                 }
                 temp2 = temp2->m_pNext;
@@ -291,29 +264,46 @@ bool WellHandler::RemoveSelectedWell(char* Well_ID)
     return false;
 }
 
-void WellHandler::Select_Sensor(const char* Well_ID)
+void WellHandler::StartupFunction()
 {
-    if(Well_ID == nullptr) return;
+    int wellCount = 0;
     
-    WellClass* temp = m_pSelectedWellHead;
-
-    while(temp != nullptr)
+    while(true)
     {
-        if(strcmp(temp->well_ID, Well_ID) == 0)
+        std::cout << "How many well(s) you want to add?" << std::endl;
+        std::cin >> wellCount;
+        if(wellCount > 0 && wellCount < totalActiveWell)
         {
-            char userSelection = ' ';
-            std::cout << "What do want to do to sensors? (A for Add | R for Remove)" << std::endl;
-            std::cout << "Select: ";
-            std::cin >> userSelection;
-            if(userSelection == 'A' || userSelection == 'a')
+            break;
+        }
+    }
+
+    std::cout << std::endl;
+   
+    for(int i = 0; i < wellCount; i++)
+    {
+        bool user_validate = false;
+        char userChoice[9];
+
+        // Check user input
+        while(user_validate == false)
+        {
+            const WellClass* temp = m_pActiveWellHead;
+            inputWindow->GetWell(m_pActiveWellHead);
+            std::cout << "Select Well: ";
+            std::cin >> userChoice;
+        
+            while(temp != nullptr)
             {
-                sensorReader->SelectSensor(temp, sensor_add);
-            }
-            else if(userSelection == 'R' || userSelection == 'r')
-            {
-                sensorReader->SelectSensor(temp, sensor_remove);
+                if(strcmp(temp->well_ID, userChoice) == 0)
+                {
+                    user_validate = true;
+                    break;
+                }
+                temp = temp->m_pNext;
             }
         }
-        temp = temp->m_pNext;
+        std::cout << std::endl;
+        AddSelectedWell(userChoice);
     }
 }

@@ -10,18 +10,17 @@
 
 #pragma once
 #include "InputWindow.h"
-#include "SensorReader.h"
 
 class WellHandler
 {
     OilFieldDataParser* dataParserXML;
-    SensorReader* sensorReader;
     InputWindow* inputWindow;
     char fileName[256];
     WellClass* m_pActiveWellHead;
     WellClass* m_pSelectedWellHead;
     int totalActiveWell;
- 
+    int timeInterval;
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds> nextTime; 
 public:
     WellHandler();
     ~WellHandler();
@@ -70,11 +69,10 @@ public:
      * \param Well_ID Takes in a character array of a Well ID to find the well within the selected well.
      * \return Return a true boolean if it successfully removed a well, or returns false if it failed.
      */
-    bool RemoveSelectedWell(char* Well_ID);
+    bool RemoveSelectedWell(char* Well_ID);;
 
     /**
-     * \brief Used to select and deselect sensors within a well.
-     * \param Well_ID Takes in a well id to access the sensor data.
+     * \brief Creates better readability in Update Function.
      */
-    void Select_Sensor(const char* Well_ID);
+    void StartupFunction();
 };

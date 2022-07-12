@@ -7,8 +7,34 @@ WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, 
 {
     m_pHead = nullptr;
     SeedGen = 0;
+    sensorReader = new SensorReader();
+    NumberOfSensors = numberSensor;
+
+    // Create Sensors
+    CreateSensorFromXML(Well_ID, parser);
     
-    for(int i = 0; i < numberSensor; i++)
+    // Set the total number of sensors.
+    GetTotalNumberOfSensor();
+}
+
+WellSensorHandler::~WellSensorHandler()
+{
+    delete sensorReader;
+    
+    // Delete all the sensor in the linked list
+    const WellSensor* sensorNow = m_pHead;
+    const WellSensor* sensor_next = nullptr;
+    while(sensorNow != nullptr)
+    {
+        sensor_next = sensorNow->next;
+        delete sensorNow;
+        sensorNow = sensor_next;
+    }
+}
+
+void WellSensorHandler::CreateSensorFromXML(char* Well_ID, OilFieldDataParser* parser)
+{
+    for(int i = 0; i < NumberOfSensors; i++)
     {
         WellSensor* sensor = new WellSensor();
         char sensorType[64] = "";
@@ -33,16 +59,42 @@ WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, 
     }
 }
 
-WellSensorHandler::~WellSensorHandler()
+bool WellSensorHandler::DeleteSensor(const char* SensorName)
 {
-    WellSensor* sensorNow = m_pHead;
-    WellSensor* sensor_next = nullptr;
+    WellSensor* temp = m_pHead;
+    WellSensor* back = nullptr;
     
-    while(sensorNow != nullptr)
+    while(temp != nullptr)
     {
-        sensor_next = sensorNow->next;
-        delete sensorNow;
-        sensorNow = sensor_next;
+        if(strcmp(SensorName, temp->GetDisplayName()) == 0)
+        {
+            if(temp == m_pHead)
+            {
+                m_pHead = temp->next;
+                temp->next = nullptr;
+                delete temp;
+                return true;
+            }
+
+            back->next = temp->next;
+            temp->next = nullptr;
+            delete temp;
+            return true;
+        }
+        back = temp;
+        temp = temp->next;
+    }
+    return false;
+}
+
+void WellSensorHandler::GetTotalNumberOfSensor()
+{
+    const WellSensor* temp = m_pHead;
+    NumberOfSensors = 0;
+    while(temp != nullptr)
+    {
+        NumberOfSensors++;
+        temp = temp->next;
     }
 }
 
@@ -62,7 +114,9 @@ void WellSensorHandler::printSensorData()
     }
 }
 
-void WellSensorHandler::SelectSensor(int Sensor , SensorSelection selection)
+
+//TODO: Rework this. Need to be dynmaic.
+void WellSensorHandler::UserInputProcessor(int Sensor, SensorSelection selection)
 {
     switch(Sensor)
     {
@@ -149,7 +203,7 @@ void WellSensorHandler::SetWellSensorSelect(const char* Name, SensorSelection se
 }
 
 
-WellSensor* WellSensorHandler::GetWellSensors() const
+WellSensor* WellSensorHandler::GetWellSensorsList() const
 {
     return m_pHead;
 }
@@ -173,4 +227,35 @@ void WellSensorHandler::AddWellSensor(WellSensor* sensor)
         }
         temp = temp->next;
     }
+}
+
+SensorReader* WellSensorHandler::GetSensorReader() const
+{
+    return sensorReader;
+}
+
+void WellSensorHandler::SelectSensor(const char* Well_ID)
+{
+    char userSelection = ' ';
+    std::cout << "What do want to do to sensors? (A for Add | R for Remove)" << std::endl;
+    std::cout << "Select: ";
+    std::cin >> userSelection;
+    if(userSelection == 'A' || userSelection == 'a')
+    {
+        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add);
+    }
+    else if(userSelection == 'R' || userSelection == 'r')
+    {
+        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_remove);
+    }
+}
+
+int WellSensorHandler::GetTotalNumberOfSensor() const
+{
+    return NumberOfSensors;
+}
+
+void WellSensorHandler::CallSensorReaderSelect()
+{
+    sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add);
 }
