@@ -76,5 +76,5 @@ public:
      * \brief Used to select and deselect sensors within a well.
      * \param Well_ID Takes in a well id to access the sensor data.
      */
-    void Select_Sensor(const char* Well_ID);
+    void Select_Sensor(char* Well_ID);
 };

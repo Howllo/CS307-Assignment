@@ -13,31 +13,20 @@
 
 class WellClass
 {
-
 public:
-    WellClass();
+    WellClass(class OilFieldDataParser* parser);
     ~WellClass();
 
     // Public variable.
     WellClass* m_pNext;
-    char well_ID[9] = "";
-    char wellOperator[32] = "";
+    char well_ID[9];
+    char wellOperator[32];
     int numberSensor;
     bool isSelect;
 
-    /**
-     * \brief Handles all the well sensors.
-     */
+    // Returns the Well Sensor Handler
     class WellSensorHandler* well_sensor_handler;
 
-    /**
-     * \brief Prints the well information and calls the sensor print.
-     */
+    // The well information and selected sensors
     void printWellData();
-
-    /**
-     * \brief Only used during start due to creation of well not having a well ID.
-     * \param parser Take in a data parser for creating sensors.
-     */
-    void CreateSensorData(class OilFieldDataParser* parser); 
 };

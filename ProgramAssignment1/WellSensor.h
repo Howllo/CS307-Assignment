@@ -12,14 +12,14 @@
 
 class WellSensor
 {
-    char sensorType[64] = "";
-    char className[64] = "";
+    char sensorType[64];
+    char className[64];
     double minData;
     double maxData;
     double currentData;
-    char displayName[64] = "";
-    char unitInfo[64] = "";
-    char unitAbbrev[64] = "";
+    char displayName[64];
+    char unitInfo[64];
+    char unitAbbrev[64];
     
 public:
     WellSensor();

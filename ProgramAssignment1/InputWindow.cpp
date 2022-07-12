@@ -62,7 +62,6 @@ std::unique_ptr<char[]> InputWindow::SelectWell(const WellClass* activeHead)
 {
     const auto currentTime = std::chrono::system_clock::now();
     std::unique_ptr<char[]> rWellID(new char[10]);
-    
     if(currentTime > nextTime || firstTime == true)
     {
         firstTime = false;
@@ -70,20 +69,13 @@ std::unique_ptr<char[]> InputWindow::SelectWell(const WellClass* activeHead)
         std::cout << "Do you want to select a well? (Y/N): ";
         std::cin >> CheckUser;
         std::cout << std::endl;
-        
         if(CheckUser == 'Y' || CheckUser == 'y')
         {
-            bool input_validation = false;
-            while(input_validation == false)
-            {
-                GetWell(activeHead);
-                char WellID[10];
-                std::cout << "What well do you want to selected?" << std::endl;
-                std::cout << "Select: ";
-                std::cin >> WellID;
-                std::copy_n(WellID, 10, &rWellID[0]);
-                input_validation = ValidateUserInput(WellID, activeHead);
-            }
+            GetWell(activeHead);
+            char WellID[10];
+            std::cout << "What well you want to selected?" << std::endl;\
+            std::cin >> WellID;
+            std::copy_n(WellID, 10, &rWellID[0]);
             return rWellID;
         }
     }
@@ -97,29 +89,35 @@ std::unique_ptr<char[]> InputWindow::RemoveSelectedWell(const WellClass* selecte
     if(currentTime > nextTime)
     {
         char CheckUser = ' ';
-        std::cout << "Do you want to remove well from selection? (Y/N): ";
+        std::cout << "Do you want to remove a well? (Y/N): ";
         std::cin >> CheckUser;
         std::cout << std::endl;
         if(CheckUser == 'Y' || CheckUser == 'y')
         {
-            bool input_validate = false;
-            while(input_validate == false)
-            {
-                GetWell(selectedHead);
-                char WellID[10];
-                std::cout << "What well do you want to remove from selection?" << std::endl;
-                std::cout << "Select: ";
-                std::cin >> WellID;
-                std::copy_n(WellID, 10, &rWellID[0]);
-                input_validate = ValidateUserInput(WellID, selectedHead);
-            }
+            GetWell(selectedHead);
+            char WellID[10];
+            std::cout << "What well you want to selected?" << std::endl;
+            std::cin >> WellID;
+            std::copy_n(WellID, 10, &rWellID[0]);
             return rWellID;
         }
     }
     return nullptr;
 }
 
-std::unique_ptr<char[]> InputWindow::SensorSettings(WellClass* head)
+void InputWindow::GetWell(const WellClass* head)
+{
+    const WellClass* temp = head;
+    std::cout << std::endl << "Choose from these wells: " << std::endl;
+    
+    while (temp != nullptr)
+    {
+        std::cout << "Well: " << temp->well_ID << std::endl;
+        temp = temp->m_pNext;
+    }
+}
+
+std::unique_ptr<char[]> InputWindow::SensorSettings()
 {
     const auto currentTime = std::chrono::system_clock::now();
     std::unique_ptr<char[]> rWellID(new char[10]);
@@ -131,52 +129,17 @@ std::unique_ptr<char[]> InputWindow::SensorSettings(WellClass* head)
         std::cout << std::endl;
         if(CheckUser == 'Y' || CheckUser == 'y')
         {
-            bool input_validation = false;
-            while(input_validation == false)
-            {
-                char WellID[10];
-                GetWell(head);
-                std::cout << "What well you want to selected?" << std::endl;
-                std::cout << "Select: ";
-                std::cin >> WellID;
-                std::copy_n(WellID, 10, &rWellID[0]);
-                input_validation = ValidateUserInput(WellID, head);
-            }
+            char WellID[10];
+            std::cout << "What well you want to selected?" << std::endl;
+            std::cin >> WellID;
+            std::copy_n(WellID, 10, &rWellID[0]);
             return rWellID;
         }
     }
     return nullptr;
 }
 
-void InputWindow::GetWell(const WellClass* head)
-{
-    const WellClass* temp = head;
-    std::cout << std::endl << "Choose from these well(s): " << std::endl;
-    
-    while (temp != nullptr)
-    {
-        std::cout << "Well: " << temp->well_ID << std::endl;
-        temp = temp->m_pNext;
-    }
-}
-
-
 std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>& InputWindow::GetNextTime()
 {
     return nextTime;
-}
-
-bool InputWindow::ValidateUserInput(const char* input, const WellClass* head)
-{
-    const WellClass* temp = head;
-
-    while(temp != nullptr)
-    {
-        if(strcmp(temp->well_ID, input) == 0)
-        {
-            return true;
-        }
-        temp = temp->m_pNext;
-    }
-    return false;
 }
