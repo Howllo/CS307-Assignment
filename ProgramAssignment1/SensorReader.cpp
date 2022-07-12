@@ -38,7 +38,7 @@ void SensorReader::SelectSensor(int NumberOfSensor, WellSensor* SensorHead, Well
 
 void SensorReader::PrintSelectionSensor(const WellSensor* Sensor)
 {
-    std::cout << "Please set the sensor you want to watch" << std::endl;
+    std::cout << "Choose a sensor that you want to modify." << std::endl;
     std::cout << "Exit - \t\t\t0" << std::endl;
     
     const WellSensor* temp = Sensor;
