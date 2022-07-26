@@ -24,5 +24,5 @@ public:
      * \param Handler Sends in the sensor handler class to use functions.
      * \param selection The decision type for getting added or remove.
      */
-    void SelectSensor(int NumberOfSensor, WellSensor* SensorHead,  WellSensorHandler* Handler, SensorSelection selection);
+    void SelectSensor(int NumberOfSensor, WellSensor* SensorHead,  class WellSensorHandler* Handler, SensorSelection selection);
 };

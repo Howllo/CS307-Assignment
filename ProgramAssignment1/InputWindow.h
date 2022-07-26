@@ -2,6 +2,7 @@
 #include <chrono>
 #include "WellClass.h"
 #include <memory>
+#include <vector>
 
 class InputWindow
 {

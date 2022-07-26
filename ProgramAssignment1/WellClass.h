@@ -24,7 +24,8 @@ public:
     char wellOperator[32] = "";
     int numberSensor;
     bool isSelect;
-
+    char **SensHolder[64][64];
+    
     /**
      * \brief Handles all the well sensors.
      */

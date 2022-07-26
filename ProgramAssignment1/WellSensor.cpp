@@ -18,6 +18,9 @@ WellSensor::WellSensor()
     isSelected = false;
     next = nullptr;
     currentData = 0;
+    step = 0;
+    minUdf = false;
+    maxUdf = false;
 }
 
 WellSensor::~WellSensor()
@@ -59,47 +62,107 @@ const char* WellSensor::GetUnitAbbrev() const
     return unitAbbrev;
 }
 
+const char* WellSensor::GetDataGenAlg() const
+{
+    return dataGenAlg;
+}
+
+const char* WellSensor::GetLinkSenType() const
+{
+    return linkSentype;
+}
+
 double WellSensor::GetCurrentData() const
 {
     return currentData;
 }
 
-void WellSensor::SetCurrentData(double Data)
+double WellSensor::GetStepData() const
 {
-    currentData = Data;
+    return step;
 }
 
-void WellSensor::SetSensorType(char* SensorType)
+bool WellSensor::GetMinUdf() const
+{
+    return minUdf;
+}
+
+bool WellSensor::GetMaxUdf() const
+{
+    return maxUdf;
+}
+
+AlgorithmStrategy* WellSensor::GetAlgorithm() const
+{
+    return algorithm_;
+}
+
+void WellSensor::SetCurrentData(const double data)
+{
+    currentData = data;
+}
+
+auto WellSensor::SetSensorType(const char* SensorType) -> void
 {
     strcpy_s(sensorType, SensorType);
 }
 
-void WellSensor::SetClassName(char* ClassName)
+void WellSensor::SetClassName(const char* class_name)
 {
-    strcpy_s(className, ClassName);
+    strcpy_s(className, class_name);
 }
 
-void WellSensor::SetMinSensorData(double DataValue)
+void WellSensor::SetMinSensorData(const double data_value)
 {
-    minData = DataValue;
+    minData = data_value;
 }
 
-void WellSensor::SetMaxSensorData(double DataValue)
+void WellSensor::SetMaxSensorData(const double data_value)
 {
-    maxData = DataValue;
+    maxData = data_value;
 }
 
-void WellSensor::SetDisplayName(char* Name)
+void WellSensor::SetDisplayName(const char* name)
 {
-    strcpy_s(displayName, Name);
+    strcpy_s(displayName, name);
 }
 
-void WellSensor::SetUnitInfo(char* Unit_Info)
+void WellSensor::SetUnitInfo(const char* Unit_Info)
 {
     strcpy_s(unitInfo, Unit_Info);
 }
 
-void WellSensor::SetUnitAbbrev(char* Unit_Abbrev)
+void WellSensor::SetUnitAbbrev(const char* unit_abbrev)
 {
-    strcpy_s(unitAbbrev, Unit_Abbrev);
+    strcpy_s(unitAbbrev, unit_abbrev);
+}
+
+void WellSensor::SetDataGenAlg(const char* data_gen)
+{
+    strcpy_s(dataGenAlg, data_gen);
+}
+
+void WellSensor::SetLinkSenType(const char* link_sen_type)
+{
+    strcpy_s(linkSentype, link_sen_type);
+}
+
+void WellSensor::SetStepData(const double _step)
+{
+    step = _step;
+}
+
+void WellSensor::SetMinUdf(const bool udf)
+{
+    minUdf = udf;
+}
+
+void WellSensor::SetMaxUdf(const bool udf)
+{
+    maxUdf = udf;
+}
+
+void WellSensor::SetAlgorithm(AlgorithmStrategy* algorithm)
+{
+    algorithm_ = algorithm;
 }
