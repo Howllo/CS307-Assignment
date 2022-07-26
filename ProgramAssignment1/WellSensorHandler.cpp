@@ -1,6 +1,12 @@
 ﻿#include "WellSensorHandler.h"
 #include <random>
+
+#include "FOLLOWLINK_IFCHANGED.h"
+#include "FOLLOWLINK_IFGREATER.h"
 #include "OilFieldDataParser.h"
+#include "RAND_MIN2MAX.h"
+#include "STEPDEC_MAX2MIN.h"
+#include "STEPINC_MIN2MAX.h"
 #include "WellSensor.h"
 
 WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, int numberSensor)
@@ -42,10 +48,16 @@ void WellSensorHandler::CreateSensorFromXML(char* Well_ID, OilFieldDataParser* p
         char displayName[64] = "";
         double minData = 0;
         double maxData = 0;
+        double step;
         char unitInfo[64] = "";
         char unitAbbrev[64] = "";
+        char dataGenAlg[64] = "";
+        char linkSenType[64] = "";
+        bool minUdf;
+        bool maxUdf;
         
-        parser->getSensorData(Well_ID, sensorType, className, displayName, &minData, &maxData, unitInfo, unitAbbrev);
+        parser->getSensorData(sensorType, className, displayName, &minData, &minUdf,
+            &maxData, &maxUdf, &step, unitInfo, unitAbbrev, dataGenAlg, linkSenType);
         
         sensor->SetSensorType(sensorType);
         sensor->SetClassName(className);
@@ -55,6 +67,7 @@ void WellSensorHandler::CreateSensorFromXML(char* Well_ID, OilFieldDataParser* p
         sensor->SetUnitInfo(unitInfo);
         sensor->SetUnitAbbrev(unitAbbrev);
         
+        SetSensorAlgorithm(sensor);
         AddWellSensor(sensor);
     }
 }
@@ -115,7 +128,7 @@ void WellSensorHandler::printSensorData()
 }
 
 
-//TODO: Rework this. Need to be dynmaic.
+//TODO: Rework this. Need to be dynamic.
 void WellSensorHandler::UserInputProcessor(int Sensor, SensorSelection selection)
 {
     switch(Sensor)
@@ -258,4 +271,36 @@ int WellSensorHandler::GetTotalNumberOfSensor() const
 void WellSensorHandler::CallSensorReaderSelect()
 {
     sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add);
+}
+
+void WellSensorHandler::SetSensorAlgorithm(WellSensor* Sensor)
+{
+    if(strcmp(Sensor->GetDataGenAlg(), "RAND_MIN2MAX") == 0)
+    {
+        Sensor->SetAlgorithm(new RAND_MIN2MAX());
+        return;
+    }
+
+    if(strcmp(Sensor->GetDataGenAlg(), "STEPINC_MIN2MAX") == 0)
+    {
+        Sensor->SetAlgorithm(new STEPINC_MIN2MAX());
+        return;
+    }
+
+    if(strcmp(Sensor->GetDataGenAlg(), "STEPDEC_MAX2MIN") == 0)
+    {
+        Sensor->SetAlgorithm(new STEPDEC_MAX2MIN());
+        return;
+    }
+
+    if(strcmp(Sensor->GetDataGenAlg(), "FOLLOWLINK_IFGREATER") == 0)
+    {
+        Sensor->SetAlgorithm(new FOLLOWLINK_IFGREATER());
+        return;
+    }
+    
+    if(strcmp(Sensor->GetDataGenAlg(), "FOLLOWLINK_IFCHANGED") == 0)
+    {
+        Sensor->SetAlgorithm(new FOLLOWLINK_IFCHANGED());
+    }
 }

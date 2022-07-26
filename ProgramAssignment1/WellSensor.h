@@ -9,6 +9,7 @@
 ****************************************/
 
 #pragma once
+#include "AlgorithmStrategy.h"
 
 class WellSensor
 {
@@ -17,10 +18,15 @@ class WellSensor
     double minData;
     double maxData;
     double currentData;
+    double step;
     char displayName[64] = "";
     char unitInfo[64] = "";
     char unitAbbrev[64] = "";
-    
+    char dataGenAlg[64] = "";
+    char linkSentype[64] = "";
+    bool minUdf;
+    bool maxUdf;
+    AlgorithmStrategy* algorithm_;
 public:
     WellSensor();
     ~WellSensor();
@@ -37,15 +43,27 @@ public:
     double GetMaxSensorData() const;
     const char* GetUnitInfo() const;
     const char* GetUnitAbbrev() const;
+    const char* GetDataGenAlg() const;
+    const char* GetLinkSenType() const;
     double GetCurrentData() const;
+    double GetStepData() const;
+    bool GetMinUdf() const;
+    bool GetMaxUdf() const;
+    AlgorithmStrategy* GetAlgorithm() const;
     
     // Setters
-    void SetSensorType(char* SensorType);
-    void SetClassName(char* ClassName);
-    void SetDisplayName(char* Name);
-    void SetMinSensorData(double DataValue);
-    void SetMaxSensorData(double DataValue);
-    void SetUnitInfo(char* Unit_Info);
-    void SetUnitAbbrev(char* Unit_Abbrev);
-    void SetCurrentData(double Data);
+    void SetSensorType(const char* SensorType);
+    void SetClassName(const char* class_name);
+    void SetDisplayName(const char* name);
+    void SetMinSensorData(double data_value);
+    void SetMaxSensorData(double data_value);
+    void SetUnitInfo(const char* Unit_Info);
+    void SetUnitAbbrev(const char* unit_abbrev);
+    void SetDataGenAlg(const char* data_gen);
+    void SetLinkSenType(const char* link_sen_type);
+    void SetCurrentData(double data);
+    void SetStepData(double _step);
+    void SetMinUdf(bool udf);
+    void SetMaxUdf(bool udf);
+    void SetAlgorithm(AlgorithmStrategy* algorithm);
 };

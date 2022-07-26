@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-    WellHandler* handler = new WellHandler();
+    const auto handler = new WellHandler();
     
     //Entrance to program.
     handler->Update();

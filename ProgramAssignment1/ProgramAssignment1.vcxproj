@@ -156,6 +156,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlgorithmStrategy.cpp" />
+    <ClCompile Include="FOLLOWLINK_IFCHANGED.cpp" />
+    <ClCompile Include="FOLLOWLINK_IFGREATER.cpp" />
     <ClCompile Include="InputWindow.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -231,7 +234,10 @@
     </ClCompile>
     <ClCompile Include="OilFieldDataParser.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RAND_MIN2MAX.cpp" />
     <ClCompile Include="SensorReader.cpp" />
+    <ClCompile Include="STEPDEC_MAX2MIN.cpp" />
+    <ClCompile Include="STEPINC_MIN2MAX.cpp" />
     <ClCompile Include="WellClass.cpp" />
     <ClCompile Include="WellHandler.cpp" />
     <ClCompile Include="WellSensor.cpp">
@@ -382,9 +388,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlgorithmStrategy.h" />
+    <ClInclude Include="FOLLOWLINK_IFCHANGED.h" />
+    <ClInclude Include="FOLLOWLINK_IFGREATER.h" />
     <ClInclude Include="InputWindow.h" />
     <ClInclude Include="OilFieldDataParser.h" />
+    <ClInclude Include="RAND_MIN2MAX.h" />
     <ClInclude Include="SensorReader.h" />
+    <ClInclude Include="STEPDEC_MAX2MIN.h" />
+    <ClInclude Include="STEPINC_MIN2MAX.h" />
     <ClInclude Include="WellClass.h" />
     <ClInclude Include="WellHandler.h" />
     <ClInclude Include="WellSensor.h" />

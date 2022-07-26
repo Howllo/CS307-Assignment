@@ -10,8 +10,8 @@ class WellSensorHandler
     WellSensor* m_pHead;
 
     // Handles sensor reading.
-    SensorReader* sensorReader;
-    
+    class SensorReader* sensorReader;
+
     /**
      * \brief Used to generate seeds for randomness.
      * THIS WAS THE ANSWER TO RANDOMNESS. Since computer is faster than perceived time in seconds, and I need to generate new seed
@@ -33,7 +33,7 @@ class WellSensorHandler
      * \param Well_ID Sends in character array with the sensor Well ID to be looked up in XML file.
      * \param parser Uses the XML parser to find the sensor in the XML file.
      */
-    void CreateSensorFromXML(char* Well_ID, OilFieldDataParser* parser);
+    void CreateSensorFromXML(char* Well_ID, class OilFieldDataParser* parser);
 public:
     /**
      * \brief Constructor takes in important information for the construction of the well sensors.
@@ -112,4 +112,10 @@ public:
      * \brief Used to call sensor reader select sensor without needing to call well sensor handler class several times.
      */
     void CallSensorReaderSelect();
+
+    /**
+     * \brief Used to set algorithms.
+     * \param Sensor Sends in a newly created sensor to find what type of algorithm  it uses.
+     */
+    void SetSensorAlgorithm(WellSensor* Sensor);
 };
