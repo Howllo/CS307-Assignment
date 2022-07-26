@@ -1,4 +1,14 @@
-﻿#pragma once
+﻿/****************************************
+*
+*	File: WellSensorHandler.h
+*	Author: Tony A. Hardiman Jr.
+*	Purpose: To do stuff.
+*	Assignment: Programming Assignment 1
+*	Declaration: This program is entirely my own work.
+*
+****************************************/
+
+#pragma once
 
 #include "SensorReader.h"
 #include "WellSensor.h"

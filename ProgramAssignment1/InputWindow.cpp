@@ -1,4 +1,14 @@
-﻿#include "InputWindow.h"
+﻿/****************************************
+*
+*	File: InputWindow.cpp
+*	Author: Tony A. Hardiman Jr.
+*	Purpose: To do stuff.
+*	Assignment: Programming Assignment 1
+*	Declaration: This program is entirely my own work.
+*
+****************************************/
+
+#include "InputWindow.h"
 #include <iostream>
 #include <string>
 
