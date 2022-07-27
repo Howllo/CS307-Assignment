@@ -1,6 +1,6 @@
 /****************************************
 *
-*	File: Main.cpp
+*	File: main.cpp
 *	Author: Tony A. Hardiman Jr.
 *	Purpose: Entrance for the entire program.
 *	Assignment: Programming Assignment 1

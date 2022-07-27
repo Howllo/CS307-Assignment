@@ -1,8 +1,17 @@
-﻿#pragma once
+﻿/****************************************
+*
+*	File: InputWindow.h
+*	Author: Tony A. Hardiman Jr.
+*	Purpose: To do stuff.
+*	Assignment: Programming Assignment 1
+*	Declaration: This program is entirely my own work.
+*
+****************************************/
+
+#pragma once
 #include <chrono>
 #include "WellClass.h"
 #include <memory>
-#include <vector>
 
 class InputWindow
 {
@@ -26,7 +35,7 @@ public:
     ~InputWindow();
 
     /**
-     * \brief Check user for want to 
+     * \brief Check user if they want to quit the program.
      * \return Return a true for wanting to quit program, or false for not wanting to quit.
      */
     bool CheckTime();

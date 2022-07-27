@@ -1,6 +1,15 @@
-﻿#include "WellSensorHandler.h"
-#include <random>
+﻿/****************************************
+*
+*	File: WellSensorHandler.cpp
+*	Author: Tony A. Hardiman Jr.
+*	Purpose: To do stuff.
+*	Assignment: Programming Assignment 1
+*	Declaration: This program is entirely my own work.
+*
+****************************************/
 
+#include "WellSensorHandler.h"
+#include <random>
 #include "FOLLOWLINK_IFCHANGED.h"
 #include "FOLLOWLINK_IFGREATER.h"
 #include "OilFieldDataParser.h"

@@ -1,9 +1,9 @@
 ﻿/****************************************
 *
-*	File: WellSensor.cpp
+*	File: STEPINC_MIN2MAX.something
 *	Author: Tony A. Hardiman Jr.
-*	Purpose: Handles all the functionality for the class WellSensor.h.
-*	Assignment: Programming Assignment 1
+*	Purpose: To do stuff.
+*	Assignment: Programming Assignment 2
 *	Declaration: This program is entirely my own work.
 *
 ****************************************/
