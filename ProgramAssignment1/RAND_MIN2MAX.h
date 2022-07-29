@@ -14,5 +14,5 @@
 class RAND_MIN2MAX : public AlgorithmStrategy
 {
 public:
-    
+    double AlgorithmUse(double min_data, double max_data, double step_data, double current_data) override;
 };

@@ -14,5 +14,5 @@
 class STEPDEC_MAX2MIN : public AlgorithmStrategy
 {
 public:
-    
+    double AlgorithmUse(double min_data, double max_data, double step_data, double current_data) override;
 };

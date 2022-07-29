@@ -75,11 +75,6 @@ public:
      * \param selection Sensor Selection is enum that tells the function what to do, add or remove.
      */
     void UserInputProcessor(int Sensor, enum SensorSelection selection);
- 
-    /**
-     * \brief Used to simulate the changing of sensor data through random.
-     */
-    void ChangeSensorData();
 
     /**
      * \brief Used to set the Well Sensor to selected or not select through the use of a boolean.

@@ -122,12 +122,12 @@ void WellSensorHandler::GetTotalNumberOfSensor()
 
 void WellSensorHandler::printSensorData()
 {
-    const WellSensor* temp = m_pHead;
-    ChangeSensorData();
+    WellSensor* temp = m_pHead;
     while(temp != nullptr)
     {
         if(temp->isSelected)
         {
+            temp->ChangeSensorData();
             std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
             std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
             std::cout << "Current Data:\t"<< temp->GetCurrentData() << " " << temp->GetUnitAbbrev() << endl << endl;
@@ -135,7 +135,6 @@ void WellSensorHandler::printSensorData()
         temp = temp->next;
     }
 }
-
 
 //TODO: Rework this. Need to be dynamic.
 void WellSensorHandler::UserInputProcessor(int Sensor, SensorSelection selection)
@@ -168,37 +167,6 @@ void WellSensorHandler::UserInputProcessor(int Sensor, SensorSelection selection
             break;
         default:
             break;
-    }
-}
-
-void WellSensorHandler::ChangeSensorData()
-{
-    WellSensor* temp = m_pHead;
-    while(temp != nullptr)
-    {
-        //Infinite Power
-        if(SeedGen == LONG_MAX)
-            SeedGen = 0;
-        
-        double MaxData = 0;
-        double MinData = 0;
-        if(strcmp(temp->GetClassName(), "SensorBitDepth") == 0 || strcmp(temp->GetClassName(), "SensorHoleDepth") == 0)
-        {
-            MinData = temp->GetMinSensorData();
-            MaxData = 7000;
-        }
-        else
-        {
-            MinData = temp->GetMinSensorData(); 
-            MaxData = temp->GetMaxSensorData();
-        }
-
-        // Randomize
-        default_random_engine totalRand(SeedGen);
-        uniform_int_distribution<int> RandomNum(((int)MinData), ((int)MaxData));
-        temp->SetCurrentData(RandomNum(totalRand));
-        temp = temp->next;
-        SeedGen++;
     }
 }
 
