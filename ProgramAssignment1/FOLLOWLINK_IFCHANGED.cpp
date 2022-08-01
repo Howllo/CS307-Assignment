@@ -19,7 +19,7 @@ double FOLLOWLINK_IFCHANGED::AlgorithmUse(double min_data, double max_data, doub
     if(last_value == 0.0)
         last_value = linked_sensor->GetCurrentData();
 
-    //Compare the two doubles safely. - Rider was complaining about !=.
+    //Compare the two doubles safely. - JetBrain Rider does not like using !=.
     if(!(std::fabs(linked_sensor->GetCurrentData() - last_value) < std::numeric_limits<double>::epsilon()))
     {
         last_value = linked_sensor->GetCurrentData();

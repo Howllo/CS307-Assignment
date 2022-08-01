@@ -9,6 +9,9 @@
 ****************************************/
 
 #pragma once
+#include <string>
+#include <vector>
+
 #include "WellSensorHandler.h"
 
 class WellClass
@@ -24,7 +27,7 @@ public:
     char wellOperator[32] = "";
     int numberSensor;
     bool isSelect;
-    char **SensHolder[64][64];
+    std::vector<std::string*>* senTypes;
     
     /**
      * \brief Handles all the well sensors.
@@ -34,7 +37,7 @@ public:
     /**
      * \brief Prints the well information and calls the sensor print.
      */
-    void printWellData();
+    void printWellData() const;
 
     /**
      * \brief Only used during start due to creation of well not having a well ID.

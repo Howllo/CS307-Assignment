@@ -19,10 +19,21 @@ InputWindow::InputWindow()
     bool checkError = false;
     char user_input[3];
     firstTime = true;
+
+    std::cout << "Time between asking for input in seconds: ";
+    std::cin >> user_input;
+    std::cout << std::endl;
+
+    for(int i = 0; i < 3; i++)
+    {
+        if(!isdigit(user_input[i]))
+            break;
+        checkError = true;
+    }
     
     while(checkError == false)
     {
-        std::cout << "Time between asking for input in seconds: ";
+        std::cout << "Error! Time in the integer seconds: ";
         std::cin >> user_input;
         std::cout << std::endl;
 

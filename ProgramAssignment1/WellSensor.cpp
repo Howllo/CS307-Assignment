@@ -22,21 +22,24 @@ WellSensor::WellSensor()
     minUdf = false;
     maxUdf = false;
     linkedSensor = nullptr;
+    algorithm_ = nullptr;
 }
 
 WellSensor::~WellSensor()
 {
+    linkedSensor = nullptr;
+    delete algorithm_;
 }
 
-void WellSensor::ChangeSensorData() const
+void WellSensor::ChangeSensorData()
 {
     if(!linkedSensor)
     {
-        algorithm_->AlgorithmUse(minData, maxData, step, currentData);
+        currentData = algorithm_->AlgorithmUse(minData, maxData, step, currentData);
     }
     else
     {
-        algorithm_->AlgorithmUse(minData, maxData, currentData, linkedSensor);
+        currentData = algorithm_->AlgorithmUse(minData, maxData, currentData, linkedSensor);
     }
 }
 

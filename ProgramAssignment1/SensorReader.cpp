@@ -10,6 +10,7 @@
 
 #include "SensorReader.h"
 #include <iostream>
+#include "WellSensor.h"
 
 SensorReader::SensorReader()
 {
@@ -19,7 +20,8 @@ SensorReader::~SensorReader()
 {
 }
 
-void SensorReader::SelectSensor(int NumberOfSensor, WellSensor* SensorHead, WellSensorHandler* Handler, SensorSelection selection)
+void SensorReader::SelectSensor(int NumberOfSensor, WellSensor* SensorHead, WellSensorHandler* Handler, SensorSelection selection,
+    std::unordered_map<int, std::string> choiceMap)
 {
     int userChoice = 0;
     for(int i = 0; i < NumberOfSensor; i++)
@@ -32,11 +34,11 @@ void SensorReader::SelectSensor(int NumberOfSensor, WellSensor* SensorHead, Well
         {
             if(selection == sensor_add)
             {
-                Handler->UserInputProcessor(userChoice, sensor_add);
+                Handler->SetWellSensorSelect(choiceMap[userChoice].c_str(), sensor_add);
             }
             else if(selection == sensor_remove)
             {
-                Handler->UserInputProcessor(userChoice, sensor_remove);
+                Handler->SetWellSensorSelect(choiceMap[userChoice].c_str(), sensor_add);
             }
             std::cout << std::endl;
         }
@@ -46,83 +48,45 @@ void SensorReader::SelectSensor(int NumberOfSensor, WellSensor* SensorHead, Well
 
 void SensorReader::PrintSelectionSensor(const WellSensor* Sensor)
 {
+    int i = 0;
     std::cout << "Choose a sensor that you want to modify." << std::endl;
     std::cout << "Exit - \t\t\t0" << std::endl;
     
     const WellSensor* temp = Sensor;
     while(temp != nullptr)
     {
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorBitDepth") == 0)
+        std::string tempStr = temp->GetDisplayName();
+        if(!temp->isSelected)
         {
-            std::cout << "Bit Depth - \t\t1" << std::endl;
+            if(tempStr.size() >= 5 && tempStr.size() <= 12)
+            {
+                std::cout << temp->GetDisplayName() << " - \t\t" << (i + 1) << std::endl;
+            }
+            else if(tempStr.size() < 5)
+            {
+                std::cout << temp->GetDisplayName() << " - \t\t\t" << (i + 1) << std::endl;
+            }
+            else
+            {
+                std::cout << temp->GetDisplayName() << " - \t" << (i + 1) << std::endl;
+            }
         }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorBitDepth") == 0)
+        else if(temp->isSelected)
         {
-            std::cout << "Bit Depth - \t\t1" << " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorHoleDepth") == 0)
-        {
-            std::cout << "Hole Depth - \t\t2" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorHoleDepth") == 0)
-        {
-            std::cout << "Hole Depth - \t\t2" << " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorROP") == 0)
-        {
-            std::cout << "Rate of Penetration - \t3" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorROP") == 0)
-        {
-            std::cout << "Rate of Penetration - \t3" << " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorPumpPressure") == 0)
-        {
-            std::cout << "Pump Pressure - \t4" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorPumpPressure") == 0)
-        {
-            std::cout << "Pump Pressure - \t4" << " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorCasingPressure") == 0)
-        {
-            std::cout << "Casing Pressure: - \t5" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorCasingPressure") == 0)
-        {
-             std::cout << "Casing Pressure: - \t5" << " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorFlowOut") == 0)
-        {
-            std::cout << "Flow Out - \t\t6" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorFlowOut") == 0)
-        {
-            std::cout << "Flow Out - \t\t6" <<  " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorTorqueMax") == 0)
-        {
-            std::cout << "Torque Max - \t\t7" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorTorqueMax") == 0)
-        {
-            std::cout << "Torque Max - \t\t7" << " - Selected" << std::endl;
-        }
-
-        if(!temp->isSelected && strcmp(temp->GetClassName(), "SensorMudPitVolume") == 0)
-        {
-            std::cout << "Mud Pit Volume - \t8" << std::endl;
-        }
-        else if(temp->isSelected && strcmp(temp->GetClassName(), "SensorMudPitVolume") == 0)
-        {
-            std::cout << "Mud Pit Volume - \t8" << " - Selected" << std::endl;
+            if(tempStr.size() >= 5 && tempStr.size() <= 12)
+            {
+                std::cout << temp->GetDisplayName() << " - \t\t" << (i + 1) << " - Selected" << std::endl;
+            }
+            else if(tempStr.size() < 5)
+            {
+                std::cout << temp->GetDisplayName() << " - \t\t\t" << (i + 1) << " - Selected" << std::endl;
+            }
+            else
+            {
+                std::cout << temp->GetDisplayName() << " - \t" << (i + 1) << " - Selected" << std::endl;
+            }
         }
         temp = temp->next;
+        i++;
     }
 }

@@ -19,16 +19,18 @@ class WellHandler
     WellClass* m_pActiveWellHead;
     WellClass* m_pSelectedWellHead;
     int totalActiveWell;
-    int timeInterval;
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds> nextTime; 
-public:
-    WellHandler();
-    ~WellHandler();
 
+    // Private constructor.
+    WellHandler();
+public:
+    // Destructor
+    ~WellHandler();
+    
     /**
-     * \brief Main loop for the entire program.
+     * \brief Singleton pattern for the handler class.
+     * \return Returns a new created instance, or instance of itself.
      */
-    void Update();
+    static WellHandler* getInstance();
 
     /**
      * \brief Used to create new wells.
@@ -97,4 +99,22 @@ public:
      * \brief Loop until user exits, or no more sensor to select.
      */
     void SelectSensorLoop();
+
+    /**
+     * \brief Used to set input window within this class.
+     * \param input Takes in outside input window class to set input of this class.
+     */
+    void SetInputWindow(InputWindow* input);
+
+    /**
+     * \brief Used to get the active well linked list.
+     * \return Returns the active well linked list.
+     */
+    WellClass* GetActiveWellHead();
+
+    /**
+     * \brief Used to get the selected  well linked list.
+     * \return Returns the selected well linked list.
+     */
+    WellClass* GetSelectedWellHead();
 };

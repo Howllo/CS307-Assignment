@@ -23,9 +23,9 @@ class WellSensor
     char unitInfo[64] = "";
     char unitAbbrev[64] = "";
     char dataGenAlg[64] = "";
-    WellSensor* linkedSensor;
     bool minUdf;
     bool maxUdf;
+    WellSensor* linkedSensor;
     AlgorithmStrategy* algorithm_;
 public:
     WellSensor();
@@ -38,7 +38,7 @@ public:
     /**
      * \brief Changes the current data within the sensor.
      */
-    void ChangeSensorData() const;
+    void ChangeSensorData();
     
     // Getters
     const char* GetSensorType() const;
