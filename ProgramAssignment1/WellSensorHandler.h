@@ -23,7 +23,7 @@ class WellSensorHandler
     // Handles sensor reading.
     class SensorReader* sensorReader;
 
-    // Dynamically selection for user choice.
+    // Dynamic selection for user choice.
     std::unordered_map<int, std::string> userChoiceMap;
     
     /**

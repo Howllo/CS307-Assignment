@@ -21,12 +21,16 @@ AlgorithmStrategy::AlgorithmStrategy()
 AlgorithmStrategy::~AlgorithmStrategy()
 = default;
 
-int AlgorithmStrategy::GenerateNewRandom(double min, double max)
+double AlgorithmStrategy::GenerateNewRandom(double min, double max)
 {
     seed_gen++;
-    std::default_random_engine totalRand(seed_gen);
-    const std::uniform_int_distribution<int> RandomNum(static_cast<int>(min), static_cast<int>(max));
-    return RandomNum(totalRand);
+
+    if(max == 0.0)
+        max = 27000;
+    
+    std::default_random_engine generator(seed_gen);
+    const std::uniform_real_distribution<double> distribution(min, max);
+    return distribution(generator);
 }
 
 double AlgorithmStrategy::AlgorithmUse(double min_data, double max_data, double step_data, double current_data)

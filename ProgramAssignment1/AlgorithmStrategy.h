@@ -25,7 +25,7 @@ protected:
      * \param max The maximum number that will be generated.
      * \return Returns a random number between min and max.
      */
-    int GenerateNewRandom(double min, double max);
+    double GenerateNewRandom(double min, double max);
 public:
     AlgorithmStrategy();
     virtual ~AlgorithmStrategy();

@@ -9,9 +9,9 @@
 ****************************************/
 
 #pragma once
+
 #include <string>
 #include <vector>
-
 #include "WellSensorHandler.h"
 
 class WellClass
