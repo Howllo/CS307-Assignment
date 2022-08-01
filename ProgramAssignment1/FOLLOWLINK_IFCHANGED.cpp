@@ -20,7 +20,7 @@ double FOLLOWLINK_IFCHANGED::AlgorithmUse(double min_data, double max_data, doub
         last_value = linked_sensor->GetCurrentData();
 
     //Compare the two doubles safely. - JetBrain Rider does not like using !=.
-    if(!(std::fabs(linked_sensor->GetCurrentData() - last_value) < std::numeric_limits<double>::epsilon()))
+    if(!(std::abs(linked_sensor->GetCurrentData() - last_value) < std::numeric_limits<double>::epsilon()))
     {
         last_value = linked_sensor->GetCurrentData();
         return GenerateNewRandom(min_data, max_data);

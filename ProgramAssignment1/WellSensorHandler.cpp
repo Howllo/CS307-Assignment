@@ -17,6 +17,7 @@
 #include "STEPDEC_MAX2MIN.h"
 #include "STEPINC_MIN2MAX.h"
 #include "WellSensor.h"
+#include <iomanip>
 
 WellSensorHandler::WellSensorHandler(std::vector<std::string*>* senTypes, OilFieldDataParser* parser, WellClass* owner)
 {
@@ -60,8 +61,8 @@ void WellSensorHandler::CreateSensorFromXML(std::vector<std::string*>* senTypes,
         strcpy_s(sensorType, (*senTypes)[i]->c_str());
         char className[64] = "";
         char displayName[64] = "";
-        double minData = 0;
-        double maxData = 0;
+        double minData = -0.1;
+        double maxData = -0.1;
         double step = 0.;
         char unitInfo[64] = "";
         char unitAbbrev[64] = "";
@@ -138,9 +139,10 @@ void WellSensorHandler::printSensorData()
         if(temp->isSelected)
         {
             temp->ChangeSensorData();
+            std::cout << std::fixed << std::setprecision(2);
             std::cout << "Sensor Name:\t" << temp->GetDisplayName() << std::endl;
             std::cout << "Unit Info:\t" << temp->GetUnitInfo() << std::endl;
-            std::cout << "Current Data:\t"<< temp->GetCurrentData() << " " << temp->GetUnitAbbrev() << std::endl << std::endl;
+            std::cout << "Current Data:\t" << temp->GetCurrentData() << " " << temp->GetUnitAbbrev() << std::endl << std::endl;
         }
         temp = temp->next;
     }

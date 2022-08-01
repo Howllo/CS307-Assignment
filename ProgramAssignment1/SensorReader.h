@@ -33,6 +33,7 @@ public:
      * \param SensorHead Takes in a linked list of the well sensor for the used from PrintSelection.
      * \param Handler Sends in the sensor handler class to use functions.
      * \param selection The decision type for getting added or remove.
+     * \param choiceMap Selections that the user can choose from.
      */
     void SelectSensor(int NumberOfSensor, WellSensor* SensorHead,  class WellSensorHandler* Handler, SensorSelection selection,
         std::unordered_map<int, std::string> choiceMap);
