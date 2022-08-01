@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
     auto nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeInterval));
     
     // Start up functions.
-    handler->StartupFunction();
     handler->SetInputWindow(inputWindow);
+    handler->StartupFunction();
     
     // Main Loop
     while(bProgramStillRunning != false)
