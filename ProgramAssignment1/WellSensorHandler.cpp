@@ -295,7 +295,7 @@ void WellSensorHandler::CreateUserMap(std::vector<std::string*>* senTypes)
     }
 }
 
-int WellSensorHandler::GetTotalNumberSensor(SensorSelection selection)
+int WellSensorHandler::GetTotalNumberSensor(SensorSelection selection) const
 {
     const WellSensor* temp = m_pHead;
     int counter = 0;
