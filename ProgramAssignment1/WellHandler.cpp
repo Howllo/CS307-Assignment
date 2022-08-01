@@ -131,7 +131,7 @@ bool WellHandler::DeleteWell(const char* Well_ID)
     return false;
 }
 
-bool WellHandler::AddActiveWell(WellClass* Well)
+bool WellHandler::AddActiveWell(WellClass* Well) const
 {
     WellClass* temp = m_pActiveWellHead;
 

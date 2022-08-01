@@ -142,5 +142,5 @@ public:
      *                  Sensor_remove check to see if sensor are able to be removed.
      * \return Returns a int of how many sensors are currently selected, or not selected.
      */
-    int GetTotalNumberSelectedSensor(enum SensorSelection selection);
+    int GetTotalNumberSensor(enum SensorSelection selection) const;
 };

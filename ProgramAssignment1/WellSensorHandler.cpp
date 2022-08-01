@@ -209,7 +209,7 @@ void WellSensorHandler::SelectSensor()
     std::cin >> userSelection;
     if(userSelection == 'A' || userSelection == 'a')
     {
-        if(GetTotalNumberSelectedSensor(sensor_add) > 0)
+        if(GetTotalNumberSensor(sensor_add) > 0)
         {
             sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add, userChoiceMap);   
         }
@@ -220,7 +220,7 @@ void WellSensorHandler::SelectSensor()
     }
     else if(userSelection == 'R' || userSelection == 'r')
     {
-        if(GetTotalNumberSelectedSensor(sensor_remove) > 0)
+        if(GetTotalNumberSensor(sensor_remove) > 0)
         {
             sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_remove, userChoiceMap);  
         }
@@ -295,9 +295,9 @@ void WellSensorHandler::CreateUserMap(std::vector<std::string*>* senTypes)
     }
 }
 
-int WellSensorHandler::GetTotalNumberSelectedSensor(SensorSelection selection)
+int WellSensorHandler::GetTotalNumberSensor(SensorSelection selection) const
 {
-    WellSensor* temp = m_pHead;
+    const WellSensor* temp = m_pHead;
     int counter = 0;
     
     while(temp != nullptr)

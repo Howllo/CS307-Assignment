@@ -51,7 +51,7 @@ public:
      * \param Well Takes in a Well Class to add back to the active well linked list.
      * \return Return a true boolean if it successfully added a well, or returns false if it failed. 
      */
-    bool AddActiveWell(WellClass* Well);
+    bool AddActiveWell(WellClass* Well) const;
 
     /**
      * \brief Used to remove wells from the active well list and add it to the selected wells.
