@@ -8,9 +8,9 @@
 *
 ****************************************/
 
+#include "WellSensorHandler.h"
 #include "SensorReader.h"
 #include <iostream>
-#include "WellSensor.h"
 
 SensorReader::SensorReader()
 {
