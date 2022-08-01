@@ -14,5 +14,5 @@
 class FOLLOWLINK_IFGREATER : public AlgorithmStrategy
 {
 public:
-    
+    double AlgorithmUse(double min_data, double max_data, double current_data, WellSensor* linked_sensor) override;
 };

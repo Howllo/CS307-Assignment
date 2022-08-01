@@ -23,9 +23,9 @@ class WellSensor
     char unitInfo[64] = "";
     char unitAbbrev[64] = "";
     char dataGenAlg[64] = "";
-    char linkSentype[64] = "";
     bool minUdf;
     bool maxUdf;
+    WellSensor* linkedSensor;
     AlgorithmStrategy* algorithm_;
 public:
     WellSensor();
@@ -34,6 +34,11 @@ public:
     // Variable
     bool isSelected;
     WellSensor* next;
+
+    /**
+     * \brief Changes the current data within the sensor.
+     */
+    void ChangeSensorData();
     
     // Getters
     const char* GetSensorType() const;
@@ -44,7 +49,7 @@ public:
     const char* GetUnitInfo() const;
     const char* GetUnitAbbrev() const;
     const char* GetDataGenAlg() const;
-    const char* GetLinkSenType() const;
+    WellSensor* GetLinkSenType() const;
     double GetCurrentData() const;
     double GetStepData() const;
     bool GetMinUdf() const;
@@ -60,7 +65,7 @@ public:
     void SetUnitInfo(const char* Unit_Info);
     void SetUnitAbbrev(const char* unit_abbrev);
     void SetDataGenAlg(const char* data_gen);
-    void SetLinkSenType(const char* link_sen_type);
+    void SetLinkSenType(WellSensor* link_sen_type);
     void SetCurrentData(double data);
     void SetStepData(double _step);
     void SetMinUdf(bool udf);

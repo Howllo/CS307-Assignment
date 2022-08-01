@@ -3,11 +3,14 @@
 // Implementation file for the data parser.
 // Author: Dr. Rick Coleman
 // Date: January 2010
+// Edited By: Tony Hardiman Jr.
 //====================================================================
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "OilFieldDataParser.h"
 #include <string.h>
+
+using namespace std;
 
 //-----------------------------------
 // Private constructor
@@ -153,19 +156,18 @@ int OilFieldDataParser::getWellCount()
 //			*numSensors - pointer to an int to hold the number of sensors
 //							on this well.  
 //			***senTypes - pointer to pointer to an array of pointers to char 
-//				arrays holding sensor types.
+//				arrays holding sensor types.  Very poor design - Tony H.
+//          *senTypes - Pointer to a vector that holds pointers to strings.
 //--------------------------------------------------------------------------
-bool OilFieldDataParser::getWellData(char *id, char *opr, int *numSensors, char ***senTypes)
+bool OilFieldDataParser::getWellData(char *id, char *opr, int *numSensors, std::vector<std::string*>* senTypes)
 {
 	int wNum = 0;
 	char line[128];
 	*numSensors = 0; // Init the count
-	// Create an array of pointers for max number of sensors
-	*senTypes = new char*[m_iNumSensors];
-
+    
 	// Reopen the file
 	inFile = new ifstream();
-	inFile->open(m_sFileName, fstream::in);
+	inFile->open(m_sFileName, ifstream::in);
 	if(inFile->is_open())
 	{
 		// Read to the the current well count
@@ -200,11 +202,9 @@ bool OilFieldDataParser::getWellData(char *id, char *opr, int *numSensors, char 
 						else if(strcmp(line, "<SENSOR>") == 0)
 						{
 							getNextLine(line, 127); // Read sensor type
-							// Create a char array for the next pointer to access
-							(*senTypes)[*numSensors] = new char[strlen(line) + 1];
-							// Copy the string into that array
-							strcpy((*senTypes)[*numSensors], line);
-							(*numSensors)++; // Increment the counter
+                            auto* newString = new std::string(line);
+						    senTypes->push_back(newString);
+						    (*numSensors)++; // Increment the counter
 						}
 						else if(strcmp(line, "</WELL>") == 0)
 						{

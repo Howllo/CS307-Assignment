@@ -18,15 +18,16 @@
 #include "STEPINC_MIN2MAX.h"
 #include "WellSensor.h"
 
-WellSensorHandler::WellSensorHandler(char* Well_ID, OilFieldDataParser* parser, int numberSensor)
+WellSensorHandler::WellSensorHandler(std::vector<std::string*>* senTypes, OilFieldDataParser* parser, WellClass* owner)
 {
+    owning_object_ = owner;
     m_pHead = nullptr;
     SeedGen = 0;
     sensorReader = new SensorReader();
-    NumberOfSensors = numberSensor;
+    NumberOfSensors = owner->numberSensor;
 
     // Create Sensors
-    CreateSensorFromXML(Well_ID, parser);
+    CreateSensorFromXML(senTypes, parser);
     
     // Set the total number of sensors.
     GetTotalNumberOfSensor();
@@ -47,23 +48,27 @@ WellSensorHandler::~WellSensorHandler()
     }
 }
 
-void WellSensorHandler::CreateSensorFromXML(char* Well_ID, OilFieldDataParser* parser)
+void WellSensorHandler::CreateSensorFromXML(std::vector<std::string*>* senTypes, OilFieldDataParser* parser)
 {
+    // Create a map.
+    CreateUserMap(senTypes);
+    
     for(int i = 0; i < NumberOfSensors; i++)
     {
         WellSensor* sensor = new WellSensor();
         char sensorType[64] = "";
+        strcpy_s(sensorType, (*senTypes)[i]->c_str());
         char className[64] = "";
         char displayName[64] = "";
         double minData = 0;
         double maxData = 0;
-        double step;
+        double step = 0.;
         char unitInfo[64] = "";
         char unitAbbrev[64] = "";
         char dataGenAlg[64] = "";
         char linkSenType[64] = "";
-        bool minUdf;
-        bool maxUdf;
+        bool minUdf = false;
+        bool maxUdf = false;
         
         parser->getSensorData(sensorType, className, displayName, &minData, &minUdf,
             &maxData, &maxUdf, &step, unitInfo, unitAbbrev, dataGenAlg, linkSenType);
@@ -75,8 +80,13 @@ void WellSensorHandler::CreateSensorFromXML(char* Well_ID, OilFieldDataParser* p
         sensor->SetMaxSensorData(maxData);
         sensor->SetUnitInfo(unitInfo);
         sensor->SetUnitAbbrev(unitAbbrev);
-        
+        sensor->SetStepData(step);
+        sensor->SetDataGenAlg(dataGenAlg);
+        sensor->SetLinkSenType(FindWellSensor(linkSenType));
+        sensor->SetMinUdf(minUdf);
+        sensor->SetMaxUdf(maxUdf);
         SetSensorAlgorithm(sensor);
+        
         AddWellSensor(sensor);
     }
 }
@@ -122,83 +132,17 @@ void WellSensorHandler::GetTotalNumberOfSensor()
 
 void WellSensorHandler::printSensorData()
 {
-    const WellSensor* temp = m_pHead;
-    ChangeSensorData();
+    WellSensor* temp = m_pHead;
     while(temp != nullptr)
     {
         if(temp->isSelected)
         {
-            std::cout << "Sensor Name:\t" << temp->GetDisplayName() << endl;
-            std::cout << "Unit Info:\t" << temp->GetUnitInfo() << endl;
-            std::cout << "Current Data:\t"<< temp->GetCurrentData() << " " << temp->GetUnitAbbrev() << endl << endl;
+            temp->ChangeSensorData();
+            std::cout << "Sensor Name:\t" << temp->GetDisplayName() << std::endl;
+            std::cout << "Unit Info:\t" << temp->GetUnitInfo() << std::endl;
+            std::cout << "Current Data:\t"<< temp->GetCurrentData() << " " << temp->GetUnitAbbrev() << std::endl << std::endl;
         }
         temp = temp->next;
-    }
-}
-
-
-//TODO: Rework this. Need to be dynamic.
-void WellSensorHandler::UserInputProcessor(int Sensor, SensorSelection selection)
-{
-    switch(Sensor)
-    {
-        case 1:
-            SetWellSensorSelect("BIT_DEPTH", selection);
-            break;
-        case 2:
-            SetWellSensorSelect("HOLE_DEPTH", selection);
-            break;
-        case 3:
-            SetWellSensorSelect("RATE_OF_PENETRATION", selection);
-            break;
-        case 4:
-            SetWellSensorSelect("PUMP_PRESSURE", selection);
-            break;
-        case 5:
-            SetWellSensorSelect("CASING_PRESSURE", selection);
-            break;
-        case 6:
-            SetWellSensorSelect("FLOW_OUT", selection);
-            break;
-        case 7:
-            SetWellSensorSelect("TORQUE_MAX", selection);
-            break;
-        case 8:
-            SetWellSensorSelect("MUD_PIT_VOLUME", selection);
-            break;
-        default:
-            break;
-    }
-}
-
-void WellSensorHandler::ChangeSensorData()
-{
-    WellSensor* temp = m_pHead;
-    while(temp != nullptr)
-    {
-        //Infinite Power
-        if(SeedGen == LONG_MAX)
-            SeedGen = 0;
-        
-        double MaxData = 0;
-        double MinData = 0;
-        if(strcmp(temp->GetClassName(), "SensorBitDepth") == 0 || strcmp(temp->GetClassName(), "SensorHoleDepth") == 0)
-        {
-            MinData = temp->GetMinSensorData();
-            MaxData = 7000;
-        }
-        else
-        {
-            MinData = temp->GetMinSensorData(); 
-            MaxData = temp->GetMaxSensorData();
-        }
-
-        // Randomize
-        default_random_engine totalRand(SeedGen);
-        uniform_int_distribution<int> RandomNum(((int)MinData), ((int)MaxData));
-        temp->SetCurrentData(RandomNum(totalRand));
-        temp = temp->next;
-        SeedGen++;
     }
 }
 
@@ -256,7 +200,7 @@ SensorReader* WellSensorHandler::GetSensorReader() const
     return sensorReader;
 }
 
-void WellSensorHandler::SelectSensor(const char* Well_ID)
+void WellSensorHandler::SelectSensor()
 {
     char userSelection = ' ';
     std::cout << "What do want to do to sensors? (A for Add | R for Remove)" << std::endl;
@@ -264,11 +208,11 @@ void WellSensorHandler::SelectSensor(const char* Well_ID)
     std::cin >> userSelection;
     if(userSelection == 'A' || userSelection == 'a')
     {
-        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add);
+        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add, userChoiceMap);
     }
     else if(userSelection == 'R' || userSelection == 'r')
     {
-        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_remove);
+        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_remove, userChoiceMap);
     }
 }
 
@@ -279,7 +223,7 @@ int WellSensorHandler::GetTotalNumberOfSensor() const
 
 void WellSensorHandler::CallSensorReaderSelect()
 {
-    sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add);
+    sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add, userChoiceMap);
 }
 
 void WellSensorHandler::SetSensorAlgorithm(WellSensor* Sensor)
@@ -311,5 +255,27 @@ void WellSensorHandler::SetSensorAlgorithm(WellSensor* Sensor)
     if(strcmp(Sensor->GetDataGenAlg(), "FOLLOWLINK_IFCHANGED") == 0)
     {
         Sensor->SetAlgorithm(new FOLLOWLINK_IFCHANGED());
+    }
+}
+
+WellSensor* WellSensorHandler::FindWellSensor(const char* sensorType) const
+{
+    WellSensor* temp = m_pHead;
+    while(temp != nullptr)
+    {
+        if(strcmp(temp->GetSensorType(), sensorType) == 0)
+        {
+            return temp;
+        }
+        temp = temp->next;
+    }
+    return nullptr;
+}
+
+void WellSensorHandler::CreateUserMap(std::vector<std::string*>* senTypes)
+{
+    for(int i = 0; i < senTypes->size(); i++)
+    {
+        userChoiceMap.insert({(i + 1), (*senTypes)[i]->c_str()});
     }
 }

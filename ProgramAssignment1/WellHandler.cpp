@@ -11,13 +11,10 @@
 #include "WellHandler.h"
 #include "OilFieldDataParser.h"
 #include <iostream>
-#include <string>
-#include <chrono>
-
-typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds> time_point;
 
 WellHandler::WellHandler()
 {
+    inputWindow = nullptr;
     m_pActiveWellHead = nullptr;
     m_pSelectedWellHead = nullptr;
     dataParserXML = nullptr;
@@ -26,31 +23,27 @@ WellHandler::WellHandler()
     {
         fileName[i] = '\0';
     }
-    
-    //char TestArray[] = "I:/CS-307/Program/ProgramAssignment1/OilFieldData.xml";
+
     std::cout << "Enter file location: ";
     std::cin >> fileName;
-    dataParserXML = dataParserXML->getInstance();
+    dataParserXML = OilFieldDataParser::getInstance();
     dataParserXML->initDataFile(fileName);
     
     // Creates the Wells
     for(int i = 0; i < dataParserXML->getWellCount(); i++)
     {
-        CreateWellFromXML();
+        if(!CreateWellFromXML())
+        {
+            std::cout << "Failed to create a new well object." << std::endl;
+        }
     }
     
-    // Delay until wells are in place.
-    inputWindow = new InputWindow();
     const WellClass* activeTemp = m_pActiveWellHead;
     while(activeTemp != nullptr)
     {
         totalActiveWell++;
         activeTemp = activeTemp->m_pNext;
     }
-
-    // Set Timers
-    timeInterval = 5;
-    nextTime = std::chrono::time_point_cast<time_point::duration>(std::chrono::system_clock::now() + std::chrono::seconds(timeInterval));
     
     // Delete Data Parser
     delete dataParserXML;
@@ -58,44 +51,33 @@ WellHandler::WellHandler()
 
 WellHandler::~WellHandler()
 {
-    delete inputWindow;
+    // Delete all the selected wells in the linked list
+    const WellClass* tempActive = m_pActiveWellHead;
+    const WellClass* temp_Next;
+    while(tempActive != nullptr)
+    {
+        temp_Next = tempActive->m_pNext;
+        delete tempActive;
+        tempActive = temp_Next;
+    }
+
+    // Delete all the selected wells in the linked list
+    tempActive = m_pSelectedWellHead;
+    temp_Next = nullptr;
+    while(tempActive != nullptr)
+    {
+        temp_Next = tempActive->m_pNext;
+        delete tempActive;
+        tempActive = temp_Next;
+    }
 }
 
-void WellHandler::Update()
+WellHandler* WellHandler::getInstance()
 {
-    bool bProgramStillRunning = true;
-    StartupFunction();
-
-    //Main Loop
-   while(bProgramStillRunning != false)
-   {
-       const auto currentTime = std::chrono::system_clock::now();
-
-       // Print Well Data and Sensor Data for Wells. After next time.
-       if(currentTime >= nextTime)
-       {
-           WellClass* temp = m_pSelectedWellHead;
-           while(temp != nullptr)
-           {
-               temp->printWellData();
-               temp = temp->m_pNext;
-           }
-       }
-       
-       // User Input2
-       if(currentTime >= inputWindow->GetNextTime())
-       {
-           std::cout << std::endl;
-           RemoveSelectedWellLoop();
-           AddSelectedWellLoop();
-           SelectSensorLoop();
-           if(inputWindow->CheckTime())
-           {
-               bProgramStillRunning = false;
-           }
-           std::cout << std::endl;
-       }
-   }
+    static WellHandler* theInstance = nullptr;
+    if(theInstance == nullptr)
+        theInstance = new WellHandler;
+    return theInstance;
 }
 
 bool WellHandler::CreateWellFromXML()
@@ -108,7 +90,8 @@ bool WellHandler::CreateWellFromXML()
     if(m_pActiveWellHead == nullptr)
     {
         m_pActiveWellHead = createWell;
-        dataParserXML->getWellData(createWell->well_ID, createWell->wellOperator, &createWell->numberSensor, *createWell->SensHolder);
+        dataParserXML->getWellData(createWell->well_ID, createWell->wellOperator, &createWell->numberSensor,
+            createWell->senTypes);
         createWell->CreateSensorData(dataParserXML);
         return true;
     }
@@ -118,7 +101,8 @@ bool WellHandler::CreateWellFromXML()
         if(temp->m_pNext == nullptr)
         {
             temp->m_pNext = createWell;
-            dataParserXML->getWellData(createWell->well_ID, createWell->wellOperator, &createWell->numberSensor, *createWell->SensHolder);
+            dataParserXML->getWellData(createWell->well_ID, createWell->wellOperator, &createWell->numberSensor,
+                createWell->senTypes);
             createWell->CreateSensorData(dataParserXML);
             return true;
         }
@@ -274,11 +258,19 @@ WellClass* WellHandler::GetWell(char* Well_ID)
     {
         if(strcmp(tempActive->well_ID, Well_ID) == 0)
         {
-            
+            return tempActive;
         }
         tempActive = tempActive->m_pNext;
     }
-    
+
+    while(tempSelected != nullptr)
+    {
+        if(strcmp(tempSelected->well_ID, Well_ID) == 0)
+        {
+            return tempSelected;
+        }
+        tempSelected = tempSelected->m_pNext;
+    }
     return nullptr;
 }
 
@@ -344,7 +336,7 @@ void WellHandler::RemoveSelectedWellLoop()
     while(true)
     {
         char UserChoice = ' ';
-        std::cout << "Do you want to select a Well? (Y/N)" << std::endl;
+        std::cout << "Do you want to remove a Well? (Y/N)" << std::endl;
         std::cin >> UserChoice; std::cout << std::endl;
         if(UserChoice == 'N' || UserChoice == 'n')
             break;
@@ -357,11 +349,26 @@ void WellHandler::SelectSensorLoop()
     while(true)
     {
         char UserChoice = ' ';
-        std::cout << "Do you want to select a Well? (Y/N)" << std::endl;
+        std::cout << "Do you want to change a well sensor? (Y/N)" << std::endl;
         std::cin >> UserChoice; std::cout << std::endl;
         if(UserChoice == 'N' || UserChoice == 'n')
             break;
         const WellClass* HolderWell = GetWell(inputWindow->SensorSettings(m_pSelectedWellHead).get());
-        HolderWell->well_sensor_handler->CallSensorReaderSelect(); 
+        HolderWell->well_sensor_handler->SelectSensor(); 
     }
+}
+
+void WellHandler::SetInputWindow(InputWindow* input)
+{
+    inputWindow = input;
+}
+
+WellClass* WellHandler::GetActiveWellHead()
+{
+    return m_pActiveWellHead;
+}
+
+WellClass* WellHandler::GetSelectedWellHead()
+{
+    return m_pSelectedWellHead;
 }

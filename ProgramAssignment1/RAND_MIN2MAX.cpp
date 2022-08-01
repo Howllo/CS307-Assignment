@@ -9,3 +9,8 @@
 ****************************************/
 
 #include "RAND_MIN2MAX.h"
+
+double RAND_MIN2MAX::AlgorithmUse(double min_data, double max_data, double step_data, double current_data)
+{
+    return current_data = GenerateNewRandom(min_data, max_data);
+}

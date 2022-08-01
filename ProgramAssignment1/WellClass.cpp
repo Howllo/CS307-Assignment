@@ -15,25 +15,33 @@
 
 WellClass::WellClass()
 {
+    senTypes = new std::vector<std::string*>; 
     well_sensor_handler = nullptr;
     isSelect = false;
     m_pNext = nullptr;
-    numberSensor = 8;
+    numberSensor = 0;
 }
 
 WellClass::~WellClass()
 {
     delete well_sensor_handler;
+    for(int i = 0; i < senTypes->size(); i++)
+    {
+        const std::string* stringDelete = (*senTypes)[i];
+        senTypes->pop_back();
+        delete stringDelete;
+    }
+    delete senTypes;
 }
 
 void WellClass::CreateSensorData(OilFieldDataParser* parser)
 {
-    well_sensor_handler = new WellSensorHandler(well_ID, parser, numberSensor);
+    well_sensor_handler = new WellSensorHandler(senTypes, parser, this);
 }
 
-void WellClass::printWellData()
+void WellClass::printWellData() const
 {
-    char time[32]; 
+    char time[32];
     const std::time_t timeT = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     ctime_s(time, sizeof(time), &timeT);
     std::cout << std::endl << "\tDisplay Time: " << time;

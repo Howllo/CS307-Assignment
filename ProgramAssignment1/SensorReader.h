@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include <chrono>
 #include "WellClass.h"
+#include <unordered_map>
 #include "WellSensor.h"
 
 enum SensorSelection { sensor_add, sensor_remove };
@@ -34,5 +34,6 @@ public:
      * \param Handler Sends in the sensor handler class to use functions.
      * \param selection The decision type for getting added or remove.
      */
-    void SelectSensor(int NumberOfSensor, WellSensor* SensorHead,  class WellSensorHandler* Handler, SensorSelection selection);
+    void SelectSensor(int NumberOfSensor, WellSensor* SensorHead,  class WellSensorHandler* Handler, SensorSelection selection,
+        std::unordered_map<int, std::string> choiceMap);
 };

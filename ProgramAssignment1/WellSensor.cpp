@@ -21,10 +21,26 @@ WellSensor::WellSensor()
     step = 0;
     minUdf = false;
     maxUdf = false;
+    linkedSensor = nullptr;
+    algorithm_ = nullptr;
 }
 
 WellSensor::~WellSensor()
 {
+    linkedSensor = nullptr;
+    delete algorithm_;
+}
+
+void WellSensor::ChangeSensorData()
+{
+    if(!linkedSensor)
+    {
+        currentData = algorithm_->AlgorithmUse(minData, maxData, step, currentData);
+    }
+    else
+    {
+        currentData = algorithm_->AlgorithmUse(minData, maxData, currentData, linkedSensor);
+    }
 }
 
 const char* WellSensor::GetSensorType() const
@@ -67,9 +83,9 @@ const char* WellSensor::GetDataGenAlg() const
     return dataGenAlg;
 }
 
-const char* WellSensor::GetLinkSenType() const
+WellSensor* WellSensor::GetLinkSenType() const
 {
-    return linkSentype;
+    return linkedSensor;
 }
 
 double WellSensor::GetCurrentData() const
@@ -142,9 +158,9 @@ void WellSensor::SetDataGenAlg(const char* data_gen)
     strcpy_s(dataGenAlg, data_gen);
 }
 
-void WellSensor::SetLinkSenType(const char* link_sen_type)
+void WellSensor::SetLinkSenType(WellSensor* link_sen_type)
 {
-    strcpy_s(linkSentype, link_sen_type);
+    linkedSensor = link_sen_type;
 }
 
 void WellSensor::SetStepData(const double _step)
