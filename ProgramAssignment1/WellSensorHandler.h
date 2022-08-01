@@ -12,16 +12,19 @@
 
 #include "SensorReader.h"
 #include <unordered_map>
+#include "WellSensor.h"
+#include "WellClass.h"
 
 class WellSensorHandler
 {
+    // Owning object of well sensor handler.
     class WellClass* owning_object_;
     
     // Used to get the head sensor for used in linked list.
-    class WellSensor* m_pHead;
+    WellSensor* m_pHead;
 
     // Handles sensor reading.
-    class SensorReader* sensorReader;
+    SensorReader* sensorReader;
 
     // Dynamic selection for user choice.
     std::unordered_map<int, std::string> userChoiceMap;
@@ -132,4 +135,12 @@ public:
      * \param senTypes Takes in a vectors with all the sensor types of this specific well.
      */
     void CreateUserMap(std::vector<std::string*>* senTypes);
+
+    /**
+     * \brief Used to get total selected or not selected sensor. Prevents the locking of user input.
+     * \param selection Sensor_add check to see if there are sensor able to be added.
+     *                  Sensor_remove check to see if sensor are able to be removed.
+     * \return Returns a int of how many sensors are currently selected, or not selected.
+     */
+    int GetTotalNumberSelectedSensor(enum SensorSelection selection);
 };

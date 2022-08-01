@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "WellClass.h"
 #include <unordered_map>
 #include "WellSensor.h"
 

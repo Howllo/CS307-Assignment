@@ -11,6 +11,8 @@
 #pragma once
 #include "InputWindow.h"
 
+enum type_well { active_well, selected_well };
+
 class WellHandler
 {
     OilFieldDataParser* dataParserXML;
@@ -18,7 +20,6 @@ class WellHandler
     char fileName[256] = "";
     WellClass* m_pActiveWellHead;
     WellClass* m_pSelectedWellHead;
-    int totalActiveWell;
 
     // Private constructor.
     WellHandler();
@@ -117,4 +118,11 @@ public:
      * \return Returns the selected well linked list.
      */
     WellClass* GetSelectedWellHead();
+    
+    /**
+     * \brief Used to get the current amount of wells that are selected.
+     * \param Type Takes in a enum of active_well or selected_well for conditionals.
+     * \return Returns the total amount of selected wells as a int.
+     */
+    int GetTotalWellNumbers(type_well Type);
 };

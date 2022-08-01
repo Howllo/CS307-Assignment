@@ -18,7 +18,6 @@ WellHandler::WellHandler()
     m_pActiveWellHead = nullptr;
     m_pSelectedWellHead = nullptr;
     dataParserXML = nullptr;
-    totalActiveWell = 0;
     for(int i = 0; i < 256; i++)
     {
         fileName[i] = '\0';
@@ -36,13 +35,6 @@ WellHandler::WellHandler()
         {
             std::cout << "Failed to create a new well object." << std::endl;
         }
-    }
-    
-    const WellClass* activeTemp = m_pActiveWellHead;
-    while(activeTemp != nullptr)
-    {
-        totalActiveWell++;
-        activeTemp = activeTemp->m_pNext;
     }
     
     // Delete Data Parser
@@ -280,9 +272,10 @@ void WellHandler::StartupFunction()
     
     while(true)
     {
-        std::cout << "How many well(s) you want to add?" << std::endl;
+        std::cout << "Total well(s): " <<  GetTotalWellNumbers(active_well) << std::endl;
+        std::cout << "How many well(s) you want to add: ";
         std::cin >> wellCount;
-        if(wellCount > 0 && wellCount < totalActiveWell)
+        if(wellCount >= 0 && wellCount <= GetTotalWellNumbers(active_well))
         {
             break;
         }
@@ -322,8 +315,11 @@ void WellHandler::AddSelectedWellLoop()
 {
     while(true)
     {
+        if(GetTotalWellNumbers(active_well) == 0)
+            break;
+        
         char UserChoice = ' ';
-        std::cout << "Do you want to select a Well? (Y/N)" << std::endl;
+        std::cout << "Do you want to select a Well? (Y/N): ";
         std::cin >> UserChoice; std::cout << std::endl;
         if(UserChoice == 'N' || UserChoice == 'n')
             break;
@@ -335,8 +331,11 @@ void WellHandler::RemoveSelectedWellLoop()
 {
     while(true)
     {
+        if(GetTotalWellNumbers(selected_well) == 0)
+            break;
+        
         char UserChoice = ' ';
-        std::cout << "Do you want to remove a Well? (Y/N)" << std::endl;
+        std::cout << "Do you want to remove well from watch list? (Y/N): ";
         std::cin >> UserChoice; std::cout << std::endl;
         if(UserChoice == 'N' || UserChoice == 'n')
             break;
@@ -348,8 +347,11 @@ void WellHandler::SelectSensorLoop()
 {
     while(true)
     {
+        if(GetTotalWellNumbers(selected_well) == 0)
+            break;
+        
         char UserChoice = ' ';
-        std::cout << "Do you want to change a well sensor? (Y/N)" << std::endl;
+        std::cout << "Do you want to change a well sensor? (Y/N): ";
         std::cin >> UserChoice; std::cout << std::endl;
         if(UserChoice == 'N' || UserChoice == 'n')
             break;
@@ -371,4 +373,30 @@ WellClass* WellHandler::GetActiveWellHead()
 WellClass* WellHandler::GetSelectedWellHead()
 {
     return m_pSelectedWellHead;
+}
+
+int WellHandler::GetTotalWellNumbers(type_well Type)
+{
+    WellClass* temp;
+    int counter = 0;
+
+    if(Type == active_well)
+    {
+        temp = m_pActiveWellHead;
+        while(temp != nullptr)
+        {
+            counter++;
+            temp = temp->m_pNext;
+        }
+    }
+    else if(Type == selected_well)
+    {
+        temp = m_pSelectedWellHead;
+        while(temp != nullptr)
+        {
+            counter++;
+            temp = temp->m_pNext;
+        }
+    }
+    return counter;
 }

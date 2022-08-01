@@ -40,10 +40,9 @@ WellSensorHandler::~WellSensorHandler()
     
     // Delete all the sensor in the linked list
     const WellSensor* sensorNow = m_pHead;
-    const WellSensor* sensor_next = nullptr;
     while(sensorNow != nullptr)
     {
-        sensor_next = sensorNow->next;
+        const WellSensor* sensor_next = sensorNow->next;
         delete sensorNow;
         sensorNow = sensor_next;
     }
@@ -210,11 +209,25 @@ void WellSensorHandler::SelectSensor()
     std::cin >> userSelection;
     if(userSelection == 'A' || userSelection == 'a')
     {
-        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add, userChoiceMap);
+        if(GetTotalNumberSelectedSensor(sensor_add) > 0)
+        {
+            sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_add, userChoiceMap);   
+        }
+        else
+        {
+            std::cout << "Currently no sensors has the ability to be added." << std::endl;
+        }
     }
     else if(userSelection == 'R' || userSelection == 'r')
     {
-        sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_remove, userChoiceMap);
+        if(GetTotalNumberSelectedSensor(sensor_remove) > 0)
+        {
+            sensorReader->SelectSensor(NumberOfSensors, m_pHead, this, sensor_remove, userChoiceMap);  
+        }
+        else
+        {
+            std::cout << "Currently no sensors has the ability to be removed." << std::endl;
+        }
     }
 }
 
@@ -276,8 +289,31 @@ WellSensor* WellSensorHandler::FindWellSensor(const char* sensorType) const
 
 void WellSensorHandler::CreateUserMap(std::vector<std::string*>* senTypes)
 {
-    for(int i = 0; i < senTypes->size(); i++)
+    for(unsigned int i = 0; i < senTypes->size(); i++)
     {
         userChoiceMap.insert({(i + 1), (*senTypes)[i]->c_str()});
     }
+}
+
+int WellSensorHandler::GetTotalNumberSelectedSensor(SensorSelection selection)
+{
+    WellSensor* temp = m_pHead;
+    int counter = 0;
+    
+    while(temp != nullptr)
+    {
+        if(selection == sensor_add)
+        {
+            if(!temp->isSelected)
+            {
+                counter++;
+            }
+        } else if(selection == sensor_remove)
+        {
+            if(temp->isSelected)
+                counter++;
+        }
+        temp = temp->next;
+    }
+    return counter;
 }
